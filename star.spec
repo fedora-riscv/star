@@ -4,7 +4,7 @@
 Summary:  An archiving tool with ACL support
 Name: star
 Version: 1.5a25
-Release: 6
+Release: 7
 URL: http://www.fokus.gmd.de/research/cc/glone/employees/joerg.schilling/private/star.html
 Source: ftp://ftp.fokus.gmd.de/pub/unix/star/alpha/%{name}-%{version}.tar.bz2
 Patch: star-1.5-icantusethestandardwayandmademyownmake.patch
@@ -15,7 +15,7 @@ Patch4: star-selinux.patch
 License: GPL
 Group: Applications/Archiving
 BuildRoot: %{_tmppath}/%{name}-%{version}-root
-BuildRequires: libattr-devel libacl-devel libtool
+BuildRequires: libattr-devel libacl-devel libtool libselinux-devel autoconf213
 
 %description
 Star saves many files together into a single tape or disk archive,
@@ -86,6 +86,9 @@ rm -rf ${RPM_BUILD_ROOT}
 %{_mandir}/man1/star*
 
 %changelog
+* Mon Oct 25 2004 Peter Vrabec <pvrabec@redhat.com>
+- fix dependencie (#123770)
+
 * Tue Jun 15 2004 Elliot Lee <sopwith@redhat.com>
 - rebuilt
 
