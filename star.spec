@@ -1,12 +1,17 @@
+%if %{?WITH_SELINUX:0}%{!?WITH_SELINUX:1}
+%define WITH_SELINUX 1
+%endif
 Summary:  An archiving tool with ACL support
 Name: star
-Version: 1.5a18
-Release: 2
+Version: 1.5a25
+Release: 3
 URL: http://www.fokus.gmd.de/research/cc/glone/employees/joerg.schilling/private/star.html
 Source: ftp://ftp.fokus.gmd.de/pub/unix/star/alpha/%{name}-%{version}.tar.bz2
 Patch: star-1.5-icantusethestandardwayandmademyownmake.patch
-Patch1: star-xattr.patch
+Patch1: star-acl-fix.patch
 Patch2: star-nofsync.patch
+Patch3: star-1.5-davej.patch
+Patch4: star-selinux.patch
 License: GPL
 Group: Applications/Archiving
 BuildRoot: %{_tmppath}/%{name}-%{version}-root
@@ -19,8 +24,14 @@ and can restore individual files from the archive. Star supports ACL.
 %prep
 %setup -q -n star-1.5
 %patch0 -p1
-%patch1 -p1 -b .xattr
+%patch1 -p1 -b .acl-fix
 %patch2 -p1 -b .nofsync
+%patch3 -p1 -b .davej
+%if %{WITH_SELINUX}
+%patch4 -p1 -b .selinux
+%endif
+
+
 for PLAT in x86_64 ppc64 s390 s390x; do
 	for AFILE in gcc cc; do
 		[ ! -e RULES/${PLAT}-linux-${AFILE}.rul ] \
@@ -40,12 +51,12 @@ make %{?_smp_mflags} PARCH=%{_target_cpu} CPPOPTX="-DNO_FSYNC" \
 	--datadir=%{_datadir} --includedir=%{_includedir} \
 	--libdir=%{_libdir} --libexec=%{_libexecdir} \
 	--localstatedir=%{_localstatedir} --sharedstatedir=%{_sharedstatedir} \
-	--mandir=%{_mandir} --infodir=%{_infodir}"
+	--mandir=%{_mandir} --infodir=%{_infodir}" < /dev/null
 
 %install
 rm -rf ${RPM_BUILD_ROOT}
 mkdir -p ${RPM_BUILD_ROOT}/%{_mandir}/man1
-%makeinstall RPM_INSTALLDIR=${RPM_BUILD_ROOT} PARCH=%{_target_cpu} K_ARCH=%{_target_cpu}
+%makeinstall RPM_INSTALLDIR=${RPM_BUILD_ROOT} PARCH=%{_target_cpu} K_ARCH=%{_target_cpu} < /dev/null
 rm -rf $RPM_BUILD_ROOT/usr/share/man
 mv $RPM_BUILD_ROOT/usr/man $RPM_BUILD_ROOT/usr/share/man
 
@@ -71,9 +82,22 @@ rm -rf ${RPM_BUILD_ROOT}
 %doc README.otherbugs README.pattern README.posix-2001  README.SSPM STARvsGNUTAR
 %doc STATUS.alpha TODO
 %{_bindir}/*star
+%{_bindir}/spax
 %{_mandir}/man1/star*
 
 %changelog
+* Mon Jan 19 2004 Jeff Johnson <jbj@jbj.org> 1.5.a25-3
+- fix: (!(x & 1)) rather than (!x & 1) patch.
+
+* Tue Sep 16 2003 Dan Walsh <dwalsh@redhat.com> 1.5a25-1.sel
+- turn selinux on
+
+* Fri Sep 5 2003 Dan Walsh <dwalsh@redhat.com> 1.5a18-5
+- turn selinux off
+
+* Mon Aug 25 2003 Dan Walsh <dwalsh@redhat.com> 1.5a18-3
+- Add SELinux modification to handle setting security context before creation.
+
 * Thu Aug 21 2003 Dan Walsh <dwalsh@redhat.com> 1.5a18-2
 - Fix free_xattr bug
 
