@@ -1,7 +1,7 @@
 Summary:  An archiving tool with ACL support
 Name: star
 Version: 1.5a04
-Release: 1
+Release: 1.0p
 URL: http://www.fokus.gmd.de/research/cc/glone/employees/joerg.schilling/private/star.html
 Source: ftp://ftp.fokus.gmd.de/pub/unix/star/alpha/%{name}-%{version}.tar.bz2
 Patch: star-1.5-icantusethestandardwayandmademyownmake.patch
@@ -21,12 +21,12 @@ and can restore individual files from the archive. Star supports ACL.
 
 %build
 export CFLAGS="$RPM_OPT_FLAGS"
-make
+make PARCH=%{_target_cpu} K_ARCH=%{_target_cpu}
 
 %install
 rm -rf $RPM_BUILD_ROOT
 mkdir -p $RPM_BUILD_ROOT/%{_mandir}
-make install RPM_INSTALLDIR=$RPM_BUILD_ROOT
+make install RPM_INSTALLDIR=$RPM_BUILD_ROOT PARCH=%{_target_cpu} K_ARCH=%{_target_cpu}
 mv $RPM_BUILD_ROOT/usr/man/* $RPM_BUILD_ROOT/%{_mandir}
 
 %clean
