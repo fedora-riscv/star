@@ -4,7 +4,7 @@
 Summary:  An archiving tool with ACL support
 Name: star
 Version: 1.5a25
-Release: 3
+Release: 4
 URL: http://www.fokus.gmd.de/research/cc/glone/employees/joerg.schilling/private/star.html
 Source: ftp://ftp.fokus.gmd.de/pub/unix/star/alpha/%{name}-%{version}.tar.bz2
 Patch: star-1.5-icantusethestandardwayandmademyownmake.patch
@@ -86,8 +86,14 @@ rm -rf ${RPM_BUILD_ROOT}
 %{_mandir}/man1/star*
 
 %changelog
+* Mon Jan 26 2004 Dan Walsh <dwalsh@redhat.com> 1.5a25-4
+- Fix call to is_selinux_enabled
+
 * Mon Jan 19 2004 Jeff Johnson <jbj@jbj.org> 1.5.a25-3
 - fix: (!(x & 1)) rather than (!x & 1) patch.
+
+* Wed Sep 24 2003 Dan Walsh <dwalsh@redhat.com> 1.5a25-2
+- turn selinux off
 
 * Tue Sep 16 2003 Dan Walsh <dwalsh@redhat.com> 1.5a25-1.sel
 - turn selinux on
