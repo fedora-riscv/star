@@ -4,7 +4,7 @@
 Summary:  An archiving tool with ACL support
 Name: star
 Version: 1.5a54
-Release: 1
+Release: 2
 URL: http://www.fokus.gmd.de/research/cc/glone/employees/joerg.schilling/private/star.html
 Source: ftp://ftp.fokus.gmd.de/pub/unix/star/alpha/%{name}-%{version}.tar.gz
 Patch0: star-1.5-newMake.patch
@@ -85,6 +85,9 @@ rm -rf ${RPM_BUILD_ROOT}
 %{_mandir}/man1/*.1.gz
 
 %changelog
+* Fri Mar 18 2005 Peter Vrabec <pvrabec@redhat.com>
+- rebuilt
+
 * Mon Nov 22 2004 Peter Vrabec <pvrabec@redhat.com>
 - upgrade 1.5a54-1 & rebuild
 
