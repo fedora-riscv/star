@@ -3,15 +3,14 @@
 %endif
 Summary:  An archiving tool with ACL support
 Name: star
-Version: 1.5a25
-Release: 7
+Version: 1.5a54
+Release: 1
 URL: http://www.fokus.gmd.de/research/cc/glone/employees/joerg.schilling/private/star.html
-Source: ftp://ftp.fokus.gmd.de/pub/unix/star/alpha/%{name}-%{version}.tar.bz2
-Patch: star-1.5-icantusethestandardwayandmademyownmake.patch
-Patch1: star-acl-fix.patch
-Patch2: star-nofsync.patch
+Source: ftp://ftp.fokus.gmd.de/pub/unix/star/alpha/%{name}-%{version}.tar.gz
+Patch0: star-1.5-newMake.patch
+Patch2: star-1.5-nofsync.patch
 Patch3: star-1.5-davej.patch
-Patch4: star-selinux.patch
+Patch4: star-1.5-selinux.patch
 License: GPL
 Group: Applications/Archiving
 BuildRoot: %{_tmppath}/%{name}-%{version}-root
@@ -23,8 +22,7 @@ and can restore individual files from the archive. Star supports ACL.
 
 %prep
 %setup -q -n star-1.5
-%patch0 -p1
-%patch1 -p1 -b .acl-fix
+%patch0 -p1 -b .newMake
 %patch2 -p1 -b .nofsync
 %patch3 -p1 -b .davej
 %if %{WITH_SELINUX}
@@ -84,8 +82,12 @@ rm -rf ${RPM_BUILD_ROOT}
 %{_bindir}/*star
 %{_bindir}/spax
 %{_mandir}/man1/star*
+%{_mandir}/man1/*.1.gz
 
 %changelog
+* Mon Nov 22 2004 Peter Vrabec <pvrabec@redhat.com>
+- upgrade 1.5a54-1 & rebuild
+
 * Mon Oct 25 2004 Peter Vrabec <pvrabec@redhat.com>
 - fix dependencie (#123770)
 
