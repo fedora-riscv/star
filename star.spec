@@ -4,7 +4,7 @@
 Summary:  An archiving tool with ACL support
 Name: star
 Version: 1.5a54
-Release: 2
+Release: 3
 URL: http://www.fokus.gmd.de/research/cc/glone/employees/joerg.schilling/private/star.html
 Source: ftp://ftp.fokus.gmd.de/pub/unix/star/alpha/%{name}-%{version}.tar.gz
 Patch0: star-1.5-newMake.patch
@@ -63,6 +63,7 @@ mv $RPM_BUILD_ROOT/usr/man $RPM_BUILD_ROOT/usr/share/man
   rm -f .%{_bindir}/mt
   rm -f .%{_bindir}/smt
   rm -f .%{_bindir}/tartest
+  rm -f .%{_bindir}/tar
   rm -rf .%{_prefix}/include
   rm -rf .%{_prefix}/lib
   rm -rf .%{_mandir}/man5
@@ -81,10 +82,12 @@ rm -rf ${RPM_BUILD_ROOT}
 %doc STATUS.alpha TODO
 %{_bindir}/*star
 %{_bindir}/spax
-%{_mandir}/man1/star*
 %{_mandir}/man1/*.1.gz
 
 %changelog
+* Thu Aug 04 2005 Karsten Hopp <karsten@redhat.de> 1.5a54-3
+- remove /usr/bin/tar symlink 
+
 * Fri Mar 18 2005 Peter Vrabec <pvrabec@redhat.com>
 - rebuilt
 
