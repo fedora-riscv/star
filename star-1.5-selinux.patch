@@ -1,37 +1,5 @@
---- star-1.5/conf/configure.in.selinux	2004-10-10 23:50:37.000000000 +0200
-+++ star-1.5/conf/configure.in	2004-11-22 14:58:09.205473648 +0100
-@@ -313,6 +313,15 @@
-   LIBS="$ac_save_LIBS"
- fi
- 
-+AC_CHECK_HEADERS(selinux/selinux.h)
-+if test "$ac_cv_header_selinux_selinux_h" = yes; then
-+  AC_CHECKING(for SELinux support)
-+  AC_CHECK_LIB(selinux, is_selinux_enabled, lib_selinux="-lselinux -lattr")
-+  ac_save_LIBS="$LIBS"
-+  LIBS="$LIBS $lib_selinux"
-+  AC_CHECK_FUNCS(is_selinux_enabled)
-+fi
-+
- AC_SUBST(largefile_cc_opt)
- 
- AC_SUBST(lib_crypt)
-@@ -320,5 +329,6 @@
- AC_SUBST(lib_acl)
- AC_SUBST(lib_acl_test)
- AC_SUBST(lib_attr)
-+AC_SUBST(lib_selinux)
- 
- AC_OUTPUT(rules.cnf)
---- star-1.5/conf/rules.cnf.in.selinux	2004-10-07 20:32:26.000000000 +0200
-+++ star-1.5/conf/rules.cnf.in	2004-11-22 15:00:24.109965048 +0100
-@@ -9,3 +9,4 @@
- LIB_ACL= @lib_acl@
- LIB_ACL_TEST= @lib_acl_test@
- LIB_ATTR = @lib_attr@
-+LIB_SELINUX = @lib_selinux@
---- star-1.5/star/pax.mk.selinux	2004-10-09 14:10:12.000000000 +0200
-+++ star-1.5/star/pax.mk	2004-11-22 14:52:56.830961792 +0100
+--- star-1.5/star/pax.mk.selinux	2005-08-12 11:06:56.000000000 +0200
++++ star-1.5/star/pax.mk	2005-08-12 11:07:46.000000000 +0200
 @@ -17,6 +17,7 @@
  CPPOPTS +=	-DUSE_LARGEFILES
  CPPOPTS +=	-DUSE_ACL
@@ -45,32 +13,32 @@
  #LIBS=		-lunos
  #LIBS=		-lschily -lc /usr/local/lib/gcc-gnulib
 -LIBS=		-ldeflt -lrmt -lschily $(LIB_ACL) $(LIB_ATTR) $(LIB_SOCKET)
-+LIBS=		-ldeflt -lrmt -lschily $(LIB_ACL) $(LIB_ATTR) $(LIB_SELINUX) $(LIB_SOCKET)
++LIBS=		-ldeflt -lrmt -lschily $(LIB_ACL) $(LIB_ATTR) $(LIB_SOCKET) $(LIB_SELINUX)
  XMK_FILE=	spaxman.mk
  
  ###########################################################################
---- star-1.5/star/Makefile.selinux	2004-10-09 13:42:57.000000000 +0200
-+++ star-1.5/star/Makefile	2004-11-22 14:43:23.823072232 +0100
-@@ -17,6 +17,7 @@
+--- star-1.5/star/Makefile.selinux	2005-08-12 11:08:26.000000000 +0200
++++ star-1.5/star/Makefile	2005-08-12 11:09:13.000000000 +0200
+@@ -24,6 +24,7 @@
  CPPOPTS +=	-DUSE_LARGEFILES
  CPPOPTS +=	-DUSE_ACL
  CPPOPTS +=	-DUSE_XATTR
 +CPPOPTS +=      -DWITH_SELINUX
  CPPOPTS +=	-DUSE_FFLAGS
  CPPOPTS +=	-DCOPY_LINKS_DELAYED
- CFILES=		star.c header.c cpiohdr.c xheader.c xattr.c \
-@@ -35,7 +36,7 @@
+ CPPOPTS +=	-DSTAR_FAT
+@@ -43,7 +44,7 @@
  		checkerr.h dumpdate.h bitstring.h
  #LIBS=		-lunos
  #LIBS=		-lschily -lc /usr/local/lib/gcc-gnulib
 -LIBS=		-ldeflt -lrmt -lschily $(LIB_ACL) $(LIB_ATTR) $(LIB_SOCKET)
-+LIBS=		-ldeflt -lrmt -lschily $(LIB_ACL) $(LIB_ATTR) $(LIB_SELINUX) $(LIB_SOCKET)
- XMK_FILE=	Makefile.man starformatman.mk
++LIBS=		-ldeflt -lrmt -lschily $(LIB_ACL) $(LIB_ATTR) $(LIB_SOCKET) $(LIB_SELINUX)
+ XMK_FILE=	Makefile.man starformatman.mk scpioman.mk gnutarman.mk \
+ 		spaxman.mk suntarman.mk
  
- ###########################################################################
---- star-1.5/star/star.c.selinux	2004-11-01 14:46:52.000000000 +0100
-+++ star-1.5/star/star.c	2004-11-22 14:31:32.269244856 +0100
-@@ -46,6 +46,10 @@
+--- star-1.5/star/star.c.selinux	2005-08-12 11:09:41.000000000 +0200
++++ star-1.5/star/star.c	2005-08-12 11:12:28.000000000 +0200
+@@ -40,6 +40,10 @@
  #endif
  #include "dumpdate.h"
  
@@ -81,10 +49,11 @@
  EXPORT	int	main		__PR((int ac, char **av));
  LOCAL	void	star_create	__PR((int ac, char *const *av));
  LOCAL	void	checkdumptype	__PR((GINFO *gp));
-@@ -357,6 +361,10 @@
- #endif
+@@ -358,6 +362,11 @@
  			comerr("Panic cannot set back effective uid.\n");
  	}
+ 	my_uid = geteuid();
++
 +#ifdef WITH_SELINUX
 +       selinux_enabled=is_selinux_enabled()>0;
 +#endif
@@ -92,9 +61,9 @@
  	/*
  	 * WARNING: We now are no more able to open a new remote connection
  	 * unless we have been called by root.
---- star-1.5/star/extract.c.selinux	2004-11-22 13:52:54.000000000 +0100
-+++ star-1.5/star/extract.c	2004-11-22 14:51:00.350669488 +0100
-@@ -212,6 +212,15 @@
+--- star-1.5/star/extract.c.selinux	2005-08-12 11:12:39.000000000 +0200
++++ star-1.5/star/extract.c	2005-08-12 11:15:17.000000000 +0200
+@@ -209,6 +209,16 @@
  		if (prblockno)
  			(void) tblocks();		/* set curblockno */
  
@@ -107,12 +76,13 @@
 +                 }
 +               }
 +#endif
- 		if (is_volhdr(&finfo)) {
- 			if (!get_volhdr(&finfo, vhname)) {
- 				excomerrno(EX_BAD,
---- star-1.5/star/starsubs.h.selinux	2004-10-18 23:17:26.000000000 +0200
-+++ star-1.5/star/starsubs.h	2004-11-22 14:47:42.514745120 +0100
-@@ -288,6 +288,11 @@
++
+ 		if (finfo.f_xflags & XF_BAD_META) {
+ 			if (!void_bad(&finfo))
+ 				break;
+--- star-1.5/star/starsubs.h.selinux	2005-08-12 11:15:44.000000000 +0200
++++ star-1.5/star/starsubs.h	2005-08-12 11:16:46.000000000 +0200
+@@ -293,6 +293,11 @@
  extern	BOOL	get_xattr	__PR((register FINFO *info));
  extern	BOOL	set_xattr	__PR((register FINFO *info));
  extern	void	free_xattr	__PR((star_xattr_t **xattr));
@@ -124,12 +94,13 @@
  #endif
  
  /*
---- star-1.5/star/xattr.c.selinux	2004-09-25 14:14:49.000000000 +0200
-+++ star-1.5/star/xattr.c	2004-11-22 14:39:53.747008648 +0100
-@@ -166,6 +166,27 @@
+--- star-1.5/star/xattr.c.selinux	2005-08-12 11:17:12.000000000 +0200
++++ star-1.5/star/xattr.c	2005-08-12 11:21:01.000000000 +0200
+@@ -159,6 +159,29 @@
  #endif  /* USE_XATTR */
  }
  
++
 +#ifdef WITH_SELINUX
 +EXPORT BOOL
 +setselinux(info)
@@ -151,10 +122,11 @@
 +}
 +#endif
 +
++
  /* ARGSUSED */
  EXPORT BOOL
  set_xattr(info)
-@@ -178,6 +199,10 @@
+@@ -171,6 +194,10 @@
  		return (TRUE);
  
  	for (xap = info->f_xattr; xap->name != NULL; xap++) {
@@ -165,3 +137,36 @@
  		if (setxattr(info->f_name, xap->name, xap->value,
  		    xap->value_len, 0) != 0) {
  			if (!errhidden(E_SETXATTR, info->f_name)) {
+--- star-1.5/conf/configure.in.selinux	2005-08-12 11:04:08.000000000 +0200
++++ star-1.5/conf/configure.in	2005-08-12 11:05:22.000000000 +0200
+@@ -312,6 +312,15 @@
+   LIBS="$ac_save_LIBS"
+ fi
+ 
++AC_CHECK_HEADERS(selinux/selinux.h)
++if test "$ac_cv_header_selinux_selinux_h" = yes; then
++  AC_CHECKING(for SELinux support)
++  AC_CHECK_LIB(selinux, is_selinux_enabled, lib_selinux="-lselinux -lattr")
++  ac_save_LIBS="$LIBS"
++  LIBS="$LIBS $lib_selinux"
++  AC_CHECK_FUNCS(is_selinux_enabled)
++fi
++
+ dnl Checks for OS madness.
+ AC_BROKEN_LINUX_EXT2_FS_H
+ AC_BROKEN_SRC_LINUX_EXT2_FS_H
+@@ -327,5 +336,6 @@
+ AC_SUBST(lib_acl)
+ AC_SUBST(lib_acl_test)
+ AC_SUBST(lib_attr)
++AC_SUBST(lib_selinux)
+ 
+ AC_OUTPUT(rules.cnf)
+--- star-1.5/conf/rules.cnf.in.selinux	2005-08-12 11:05:53.000000000 +0200
++++ star-1.5/conf/rules.cnf.in	2005-08-12 11:06:12.000000000 +0200
+@@ -9,3 +9,5 @@
+ LIB_ACL= @lib_acl@
+ LIB_ACL_TEST= @lib_acl_test@
+ LIB_ATTR = @lib_attr@
++LIB_SELINUX = @lib_selinux@
++

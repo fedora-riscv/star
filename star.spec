@@ -3,8 +3,8 @@
 %endif
 Summary:  An archiving tool with ACL support
 Name: star
-Version: 1.5a54
-Release: 3
+Version: 1.5a64
+Release: 1
 URL: http://www.fokus.gmd.de/research/cc/glone/employees/joerg.schilling/private/star.html
 Source: ftp://ftp.fokus.gmd.de/pub/unix/star/alpha/%{name}-%{version}.tar.gz
 Patch0: star-1.5-newMake.patch
@@ -64,11 +64,16 @@ mv $RPM_BUILD_ROOT/usr/man $RPM_BUILD_ROOT/usr/share/man
   rm -f .%{_bindir}/smt
   rm -f .%{_bindir}/tartest
   rm -f .%{_bindir}/tar
+  rm -f .%{_bindir}/gnutar
+  rm -f .%{_bindir}/scpio
+  rm -f .%{_bindir}/star_fat
+  rm -f .%{_bindir}/star_sym
+  rm -f .%{_bindir}/suntar
   rm -rf .%{_prefix}/include
   rm -rf .%{_prefix}/lib
   rm -rf .%{_mandir}/man5
   rm -rf .%{_mandir}/man3
-  rm -rf .%{_mandir}/man1/{tartest,rmt}.1*
+  rm -rf .%{_mandir}/man1/{tartest,rmt,gnutar,scpio,smt,suntar}.1*
   rm -rf .%{_prefix}/sbin
 )
 
@@ -85,6 +90,9 @@ rm -rf ${RPM_BUILD_ROOT}
 %{_mandir}/man1/*.1.gz
 
 %changelog
+* Fri Aug 12 2005 Peter Vrabec <pvrabec@redhat.com>
+- upgrade  1.5a64-1
+
 * Thu Aug 04 2005 Karsten Hopp <karsten@redhat.de> 1.5a54-3
 - remove /usr/bin/tar symlink 
 
