@@ -3,15 +3,14 @@
 %endif
 Summary:  An archiving tool with ACL support
 Name: star
-Version: 1.5a64
-Release: 2
-URL: http://www.fokus.gmd.de/research/cc/glone/employees/joerg.schilling/private/star.html
-Source: ftp://ftp.fokus.gmd.de/pub/unix/star/alpha/%{name}-%{version}.tar.gz
+Version: 1.5a65
+Release: 1
+Source: ftp://ftp.berlios.de/pub/star/alpha/%{name}-%{version}.tar.bz2
 Patch0: star-1.5-newMake.patch
 Patch2: star-1.5-nofsync.patch
 Patch3: star-1.5-davej.patch
 Patch4: star-1.5-selinux.patch
-License: GPL
+License: CDDL 1.0
 Group: Applications/Archiving
 BuildRoot: %{_tmppath}/%{name}-%{version}-root
 BuildRequires: libattr-devel libacl-devel libtool libselinux-devel autoconf213
@@ -39,8 +38,13 @@ done
 cp -f /usr/share/libtool/config.sub conf/config.sub
 
 %build
-export CFLAGS="$RPM_OPT_FLAGS"
+export COPTOPT="$RPM_OPT_FLAGS"
+export MAKEPROG=gmake
+# Autoconfiscate
 (cd conf; autoconf-2.13)
+# Disable fat binary
+(cd star; rm Makefile; cp all.mk Makefile)
+
 make %{?_smp_mflags} PARCH=%{_target_cpu} CPPOPTX="-DNO_FSYNC" \
 	K_ARCH=%{_target_cpu} \
 	CONFFLAGS="%{_target_platform} --prefix=%{_prefix} \
@@ -52,28 +56,32 @@ make %{?_smp_mflags} PARCH=%{_target_cpu} CPPOPTX="-DNO_FSYNC" \
 	--mandir=%{_mandir} --infodir=%{_infodir}" < /dev/null
 
 %install
+export MAKEPROG=gmake
 rm -rf ${RPM_BUILD_ROOT}
-mkdir -p ${RPM_BUILD_ROOT}/%{_mandir}/man1
+mkdir -p ${RPM_BUILD_ROOT}%{_mandir}/man1
 %makeinstall RPM_INSTALLDIR=${RPM_BUILD_ROOT} PARCH=%{_target_cpu} K_ARCH=%{_target_cpu} < /dev/null
 rm -rf $RPM_BUILD_ROOT/usr/share/man
-mv $RPM_BUILD_ROOT/usr/man $RPM_BUILD_ROOT/usr/share/man
+mv $RPM_BUILD_ROOT/usr/man $RPM_BUILD_ROOT%{_mandir}
 
 # XXX Nuke unpackaged files.
 ( cd ${RPM_BUILD_ROOT}
+  rm -f .%{_prefix}%{_sysconfdir}/default/rmt
   rm -f .%{_bindir}/mt
   rm -f .%{_bindir}/smt
   rm -f .%{_bindir}/tartest
   rm -f .%{_bindir}/tar
   rm -f .%{_bindir}/gnutar
   rm -f .%{_bindir}/scpio
+  rm -f .%{_bindir}/star_fat
   rm -f .%{_bindir}/star_sym
   rm -f .%{_bindir}/suntar
+  rm -rf .%{_prefix}%{_sysconfdir}
   rm -rf .%{_prefix}/include
   rm -rf .%{_prefix}/lib
   rm -rf .%{_mandir}/man5
   rm -rf .%{_mandir}/man3
-  rm -rf .%{_mandir}/man1/{tartest,rmt,gnutar,scpio,smt,suntar}.1*
-  rm -rf .%{_prefix}/sbin
+  rm -rf .%{_mandir}/man1/{tartest,rmt,gnutar,scpio,smt,suntar,match}.1*
+  rm -rf .%{_sbindir}
 )
 
 %clean
@@ -82,14 +90,26 @@ rm -rf ${RPM_BUILD_ROOT}
 %files
 %defattr(-,root,root)
 %doc README AN* COPYING README.ACL README.crash README.largefiles README.linux
-%doc README.otherbugs README.pattern README.posix-2001  README.SSPM STARvsGNUTAR
+%doc README.otherbugs README.pattern README.posix-2001  README.SSPM
+%doc STARvsGNUTAR
 %doc STATUS.alpha TODO
-%{_bindir}/*star
+%{_bindir}/star
+%{_bindir}/ustar
 %{_bindir}/spax
-%{_bindir}/star_fat
-%{_mandir}/man1/*.1.gz
+%{_mandir}/man1/star.1*
+%{_mandir}/man1/spax.1*
 
 %changelog
+* Fri Aug 26 2005 Peter Vrabec <pvrabec@redhat.com> 1.5a65-1
+- upgrade 1.5a65-1 made by Horst H. von Brand <vonbrand@inf.utfsm.cl>
+- Source URL changed, no homepage now
+- License changed from GPL to CDDL 1.0
+- Define MAKEPROG=gmake like the Gmake.linux script does
+- Disable fat binary as per star/Makefile, update star-1.5-selinux.patch for
+  the various *.mk files used in that case
+- Axe /usr/share/man/man1/match.1*, /usr/etc/default/rmt too
+- Explicit listing in %files, allow for compressed or plain manpages
+
 * Fri Aug 26 2005 Peter Vrabec <pvrabec@redhat.com>
 - do not remove star_fat
 
