@@ -3,7 +3,7 @@
 %endif
 Summary:  An archiving tool with ACL support
 Name: star
-Version: 1.5a65
+Version: 1.5a67
 Release: 1
 Source: ftp://ftp.berlios.de/pub/star/alpha/%{name}-%{version}.tar.bz2
 Patch0: star-1.5-newMake.patch
@@ -100,6 +100,9 @@ rm -rf ${RPM_BUILD_ROOT}
 %{_mandir}/man1/spax.1*
 
 %changelog
+* Thu Sep 22 2005 Peter Vrabec <pvrabec@redhat.com> 1.5a67-1
+- upgrade
+
 * Fri Aug 26 2005 Peter Vrabec <pvrabec@redhat.com> 1.5a65-1
 - upgrade 1.5a65-1 made by Horst H. von Brand <vonbrand@inf.utfsm.cl>
 - Source URL changed, no homepage now
