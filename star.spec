@@ -3,13 +3,15 @@
 %endif
 Summary:  An archiving tool with ACL support
 Name: star
-Version: 1.5a68
+Version: 1.5a69
 Release: 1
 Source: ftp://ftp.berlios.de/pub/star/alpha/%{name}-%{version}.tar.bz2
-Patch0: star-1.5-newMake.patch
+Patch1: star-1.5-newMake.patch
 Patch2: star-1.5-nofsync.patch
 Patch3: star-1.5-davej.patch
 Patch4: star-1.5-selinux.patch
+Patch5: star-1.5-defineULLONG.patch
+
 License: CDDL 1.0
 Group: Applications/Archiving
 BuildRoot: %{_tmppath}/%{name}-%{version}-root
@@ -21,13 +23,13 @@ and can restore individual files from the archive. Star supports ACL.
 
 %prep
 %setup -q -n star-1.5
-%patch0 -p1 -b .newMake
+%patch1 -p1 -b .newMake
 %patch2 -p1 -b .nofsync
 %patch3 -p1 -b .davej
 %if %{WITH_SELINUX}
 %patch4 -p1 -b .selinux
 %endif
-
+%patch5 -p1 -b .defineULLONG
 
 for PLAT in x86_64 ppc64 s390 s390x; do
 	for AFILE in gcc cc; do
@@ -100,6 +102,9 @@ rm -rf ${RPM_BUILD_ROOT}
 %{_mandir}/man1/spax.1*
 
 %changelog
+* Tue Nov 08 2005 Peter Vrabec <pvrabec@redhat.com> 1.5a69-1
+- upgrade
+
 * Mon Oct 10 2005 Peter Vrabec <pvrabec@redhat.com> 1.5a68-1
 - upgrade
 
