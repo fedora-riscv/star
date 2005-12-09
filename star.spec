@@ -4,7 +4,7 @@
 Summary:  An archiving tool with ACL support
 Name: star
 Version: 1.5a69
-Release: 1
+Release: 1.1
 Source: ftp://ftp.berlios.de/pub/star/alpha/%{name}-%{version}.tar.bz2
 Patch1: star-1.5-newMake.patch
 Patch2: star-1.5-nofsync.patch
@@ -102,6 +102,9 @@ rm -rf ${RPM_BUILD_ROOT}
 %{_mandir}/man1/spax.1*
 
 %changelog
+* Fri Dec 09 2005 Jesse Keating <jkeating@redhat.com>
+- rebuilt
+
 * Tue Nov 08 2005 Peter Vrabec <pvrabec@redhat.com> 1.5a69-1
 - upgrade
 
