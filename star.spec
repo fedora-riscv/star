@@ -3,16 +3,14 @@
 %endif
 Summary:  An archiving tool with ACL support
 Name: star
-Version: 1.5a69
-Release: 1.2.1
+Version: 1.5a71
+Release: 1
+URL: http://cdrecord.berlios.de/old/private/star.html
 Source: ftp://ftp.berlios.de/pub/star/alpha/%{name}-%{version}.tar.bz2
 Patch1: star-1.5-newMake.patch
-Patch2: star-1.5-nofsync.patch
-Patch3: star-1.5-davej.patch
-Patch4: star-1.5-selinux.patch
-Patch5: star-1.5-defineULLONG.patch
+Patch2: star-1.5-selinux.patch
 
-License: CDDL 1.0
+License: CDDL
 Group: Applications/Archiving
 BuildRoot: %{_tmppath}/%{name}-%{version}-root
 BuildRequires: libattr-devel libacl-devel libtool libselinux-devel autoconf213
@@ -24,20 +22,9 @@ and can restore individual files from the archive. Star supports ACL.
 %prep
 %setup -q -n star-1.5
 %patch1 -p1 -b .newMake
-%patch2 -p1 -b .nofsync
-%patch3 -p1 -b .davej
 %if %{WITH_SELINUX}
-%patch4 -p1 -b .selinux
+%patch2 -p1 -b .selinux
 %endif
-%patch5 -p1 -b .defineULLONG
-
-for PLAT in x86_64 ppc64 s390 s390x; do
-	for AFILE in gcc cc; do
-		[ ! -e RULES/${PLAT}-linux-${AFILE}.rul ] \
-		&& ln -s i586-linux-${AFILE}.rul RULES/${PLAT}-linux-${AFILE}.rul
-	done
-done
-cp -f /usr/share/libtool/config.sub conf/config.sub
 
 %build
 export COPTOPT="$RPM_OPT_FLAGS"
@@ -47,7 +34,8 @@ export MAKEPROG=gmake
 # Disable fat binary
 (cd star; rm Makefile; cp all.mk Makefile)
 
-make %{?_smp_mflags} PARCH=%{_target_cpu} CPPOPTX="-DNO_FSYNC" \
+#make %{?_smp_mflags} PARCH=%{_target_cpu} CPPOPTX="-DNO_FSYNC" \
+make %{?_smp_mflags} PARCH=%{_target_cpu} \
 	K_ARCH=%{_target_cpu} \
 	CONFFLAGS="%{_target_platform} --prefix=%{_prefix} \
 	--exec-prefix=%{_exec_prefix} --bindir=%{_bindir} \
@@ -91,7 +79,7 @@ rm -rf ${RPM_BUILD_ROOT}
 
 %files
 %defattr(-,root,root)
-%doc README AN* COPYING README.ACL README.crash README.largefiles README.linux
+%doc README AN* COPYING CDDL.Schily.txt README.ACL README.crash README.largefiles README.linux
 %doc README.otherbugs README.pattern README.posix-2001  README.SSPM
 %doc STARvsGNUTAR
 %doc STATUS.alpha TODO
@@ -102,11 +90,8 @@ rm -rf ${RPM_BUILD_ROOT}
 %{_mandir}/man1/spax.1*
 
 %changelog
-* Fri Feb 10 2006 Jesse Keating <jkeating@redhat.com> - 1.5a69-1.2.1
-- bump again for double-long bug on ppc(64)
-
-* Tue Feb 07 2006 Jesse Keating <jkeating@redhat.com> - 1.5a69-1.2
-- rebuilt for new gcc4.1 snapshot and glibc changes
+* Wed Feb 22 2006 Peter Vrabec <pvrabec@redhat.com> 1.5a71-1
+- upgrade
 
 * Fri Dec 09 2005 Jesse Keating <jkeating@redhat.com>
 - rebuilt
