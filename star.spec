@@ -26,6 +26,13 @@ and can restore individual files from the archive. Star supports ACL.
 %patch2 -p1 -b .selinux
 %endif
 
+for PLAT in x86_64 ppc64 s390 s390x; do
+        for AFILE in gcc cc; do
+                [ ! -e RULES/${PLAT}-linux-${AFILE}.rul ] \
+                && ln -s i586-linux-${AFILE}.rul RULES/${PLAT}-linux-${AFILE}.rul
+        done
+done
+
 %build
 export COPTOPT="$RPM_OPT_FLAGS"
 export MAKEPROG=gmake
