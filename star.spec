@@ -4,7 +4,7 @@
 Summary:  An archiving tool with ACL support
 Name: star
 Version: 1.5a74
-Release: 1
+Release: 2
 URL: http://cdrecord.berlios.de/old/private/star.html
 Source: ftp://ftp.berlios.de/pub/star/alpha/%{name}-%{version}.tar.bz2
 Patch1: star-1.5-newMake.patch
@@ -97,6 +97,9 @@ rm -rf ${RPM_BUILD_ROOT}
 %{_mandir}/man1/spax.1*
 
 %changelog
+* Fri Jun 02 2006 Peter Vrabec <pvrabec@redhat.com> 1.5a74-2
+- update tarball
+
 * Mon Apr 24 2006 Peter Vrabec <pvrabec@redhat.com> 1.5a74-1
 - upgrade
 
