@@ -4,7 +4,7 @@
 Summary:  An archiving tool with ACL support
 Name: star
 Version: 1.5a74
-Release: 2
+Release: 3
 URL: http://cdrecord.berlios.de/old/private/star.html
 Source: ftp://ftp.berlios.de/pub/star/alpha/%{name}-%{version}.tar.bz2
 Patch1: star-1.5-newMake.patch
@@ -13,7 +13,7 @@ Patch2: star-1.5-selinux.patch
 License: CDDL
 Group: Applications/Archiving
 BuildRoot: %{_tmppath}/%{name}-%{version}-root
-BuildRequires: libattr-devel libacl-devel libtool libselinux-devel autoconf213
+BuildRequires: libattr-devel libacl-devel libtool libselinux-devel
 
 %description
 Star saves many files together into a single tape or disk archive,
@@ -37,7 +37,7 @@ done
 export COPTOPT="$RPM_OPT_FLAGS"
 export MAKEPROG=gmake
 # Autoconfiscate
-(cd conf; autoconf-2.13)
+(cd conf; AC_MACRODIR=. AWK=gawk ./autoconf)
 # Disable fat binary
 (cd star; rm Makefile; cp all.mk Makefile)
 
@@ -97,6 +97,9 @@ rm -rf ${RPM_BUILD_ROOT}
 %{_mandir}/man1/spax.1*
 
 %changelog
+* Tue Jun 13 2006 Peter Vrabec <pvrabec@redhat.com> 1.5a74-3
+- use autoconf provided by star
+
 * Fri Jun 02 2006 Peter Vrabec <pvrabec@redhat.com> 1.5a74-2
 - update tarball
 
