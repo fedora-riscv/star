@@ -1,6 +1,6 @@
---- star-1.5/conf/configure.in.selinux	2006-02-07 11:23:13.000000000 -0500
-+++ star-1.5/conf/configure.in	2006-02-22 10:11:28.000000000 -0500
-@@ -357,6 +357,15 @@
+--- star-1.5/conf/configure.in.selinux	2006-10-20 15:33:49.000000000 +0200
++++ star-1.5/conf/configure.in	2007-01-18 15:51:43.000000000 +0100
+@@ -401,6 +401,15 @@
  	echo no
  fi
  
@@ -16,28 +16,27 @@
  dnl Checks for OS madness.
  AC_BROKEN_LINUX_EXT2_FS_H
  AC_BROKEN_SRC_LINUX_EXT2_FS_H
-@@ -373,5 +382,6 @@
- AC_SUBST(lib_acl_test)
- AC_SUBST(lib_attr)
+@@ -420,5 +429,6 @@
  AC_SUBST(lib_secdb)
+ AC_SUBST(lib_pthread)
+ AC_SUBST(lib_rt)
 +AC_SUBST(lib_selinux)
  
  AC_OUTPUT(rules.cnf)
---- star-1.5/conf/rules.cnf.in.selinux	2005-12-20 06:41:02.000000000 -0500
-+++ star-1.5/conf/rules.cnf.in	2006-02-22 10:12:56.000000000 -0500
-@@ -10,3 +10,5 @@
- LIB_ACL_TEST= @lib_acl_test@
- LIB_ATTR = @lib_attr@
+--- star-1.5/conf/rules.cnf.in.selinux	2006-09-16 22:01:41.000000000 +0200
++++ star-1.5/conf/rules.cnf.in	2007-01-18 15:52:05.000000000 +0100
+@@ -14,3 +14,4 @@
  LIB_SECDB = @lib_secdb@
+ LIB_PTHREAD = @lib_pthread@
+ LIB_RT = @lib_rt@
 +LIB_SELINUX = @lib_selinux@
-+
---- star-1.5/star/pax.mk.selinux	2006-02-02 10:00:31.000000000 -0500
-+++ star-1.5/star/pax.mk	2006-02-22 10:10:09.000000000 -0500
+--- star-1.5/star/pax.mk.selinux	2006-11-05 02:52:19.000000000 +0100
++++ star-1.5/star/pax.mk	2007-01-18 15:53:07.000000000 +0100
 @@ -17,6 +17,7 @@
  CPPOPTS +=	-DUSE_LARGEFILES
  CPPOPTS +=	-DUSE_ACL
  CPPOPTS +=	-DUSE_XATTR
-+CPPOPTS +=      -DWITH_SELINUX
++CPPOPTS +=	-DWITH_SELINUX
  CPPOPTS +=	-DUSE_FFLAGS
  CPPOPTS +=	-DPAX
  CFILES=		pax.c header.c cpiohdr.c xheader.c xattr.c \
@@ -50,8 +49,8 @@
  XMK_FILE=	spaxman.mk
  
  ###########################################################################
---- star-1.5/star/star.mk.selinux	2005-08-28 07:22:30.000000000 -0400
-+++ star-1.5/star/star.mk	2006-02-22 10:10:09.000000000 -0500
+--- star-1.5/star/star.mk.selinux	2006-11-05 02:52:19.000000000 +0100
++++ star-1.5/star/star.mk	2007-01-18 15:54:11.000000000 +0100
 @@ -19,6 +19,7 @@
  CPPOPTS +=	-DUSE_XATTR
  CPPOPTS +=	-DUSE_FFLAGS
@@ -69,18 +68,18 @@
  XMK_FILE=	Makefile.man starformatman.mk
  
  ###########################################################################
---- star-1.5/star/star_fat.mk.selinux	2005-11-01 15:53:51.000000000 -0500
-+++ star-1.5/star/star_fat.mk	2006-02-22 10:10:09.000000000 -0500
-@@ -28,6 +28,7 @@
- CPPOPTS +=	-DUSE_FFLAGS
+--- star-1.5/star/star_fat.mk.selinux	2006-11-05 02:52:19.000000000 +0100
++++ star-1.5/star/star_fat.mk	2007-01-18 15:54:39.000000000 +0100
+@@ -29,6 +29,7 @@
  CPPOPTS +=	-DCOPY_LINKS_DELAYED
  CPPOPTS +=	-DSTAR_FAT
+ CPPOPTS +=	-DSCHILY_PRINT
 +CPPOPTS +=	-DWITH_SELINUX
  CFILES=		star_fat.c header.c cpiohdr.c xheader.c xattr.c \
  		list.c extract.c create.c append.c diff.c restore.c \
  		remove.c star_unix.c acl_unix.c acltext.c fflags.c \
-@@ -48,7 +49,7 @@
- 		find.h gettnum.h fetchdir.h walk.h find_list.h mem.h find_misc.h
+@@ -49,7 +50,7 @@
+ 		find.h gettnum.h fetchdir.h walk.h find_list.h find_misc.h
  #LIBS=		-lunos
  #LIBS=		-lschily -lc /usr/local/lib/gcc-gnulib
 -LIBS=		-ldeflt -lrmt -lschily $(LIB_ACL) $(LIB_ATTR) $(LIB_SOCKET)
@@ -88,18 +87,18 @@
  XMK_FILE=	Makefile.man starformatman.mk scpioman.mk gnutarman.mk \
  		spaxman.mk suntarman.mk Makefile.dfl
  
---- star-1.5/star/Makefile.selinux	2005-11-01 15:53:51.000000000 -0500
-+++ star-1.5/star/Makefile	2006-02-22 10:10:09.000000000 -0500
+--- star-1.5/star/Makefile.selinux	2006-11-05 02:52:19.000000000 +0100
++++ star-1.5/star/Makefile	2007-01-18 15:55:29.000000000 +0100
 @@ -25,6 +25,7 @@
  CPPOPTS +=	-DUSE_FIND
  CPPOPTS +=	-DUSE_ACL
  CPPOPTS +=	-DUSE_XATTR
-+CPPOPTS +=      -DWITH_SELINUX
++CPPOPTS +=	-DWITH_SELINUX
  CPPOPTS +=	-DUSE_FFLAGS
  CPPOPTS +=	-DCOPY_LINKS_DELAYED
  CPPOPTS +=	-DSTAR_FAT
-@@ -48,7 +49,7 @@
- 		find.h gettnum.h fetchdir.h walk.h find_list.h mem.h find_misc.h
+@@ -49,7 +50,7 @@
+ 		find.h gettnum.h fetchdir.h walk.h find_list.h find_misc.h
  #LIBS=		-lunos
  #LIBS=		-lschily -lc /usr/local/lib/gcc-gnulib
 -LIBS=		-ldeflt -lrmt -lschily $(LIB_ACL) $(LIB_ATTR) $(LIB_SOCKET)
@@ -107,9 +106,9 @@
  XMK_FILE=	Makefile.man starformatman.mk scpioman.mk gnutarman.mk \
  		spaxman.mk suntarman.mk Makefile.dfl
  
---- star-1.5/star/star.c.selinux	2006-02-18 14:09:39.000000000 -0500
-+++ star-1.5/star/star.c	2006-02-22 10:10:09.000000000 -0500
-@@ -42,6 +42,10 @@
+--- star-1.5/star/star.c.selinux	2006-11-20 14:31:30.000000000 +0100
++++ star-1.5/star/star.c	2007-01-18 15:56:46.000000000 +0100
+@@ -45,6 +45,10 @@
  #include "starsubs.h"
  #include "checkerr.h"
  
@@ -120,7 +119,7 @@
  EXPORT	int	main		__PR((int ac, char **av));
  LOCAL	void	star_create	__PR((int ac, char *const *av));
  LOCAL	void	checkdumptype	__PR((GINFO *gp));
-@@ -375,6 +379,11 @@
+@@ -382,6 +386,11 @@
  			comerr("Panic cannot set back effective uid.\n");
  	}
  	my_uid = geteuid();
@@ -132,9 +131,9 @@
  	/*
  	 * WARNING: We now are no more able to open a new remote connection
  	 * unless we have been called by root.
---- star-1.5/star/extract.c.selinux	2005-11-13 08:57:21.000000000 -0500
-+++ star-1.5/star/extract.c	2006-02-22 10:14:45.000000000 -0500
-@@ -224,6 +224,17 @@
+--- star-1.5/star/extract.c.selinux	2006-10-15 15:51:44.000000000 +0200
++++ star-1.5/star/extract.c	2007-01-18 15:57:57.000000000 +0100
+@@ -233,6 +233,17 @@
  			continue;
  		}
  #endif
@@ -152,8 +151,8 @@
  		if (finfo.f_flags & F_BAD_META) {
  			if (!void_bad(&finfo))
  				break;
---- star-1.5/star/cpio.mk.selinux	2006-02-02 10:01:18.000000000 -0500
-+++ star-1.5/star/cpio.mk	2006-02-22 10:10:09.000000000 -0500
+--- star-1.5/star/cpio.mk.selinux	2006-11-05 02:52:19.000000000 +0100
++++ star-1.5/star/cpio.mk	2007-01-18 15:58:23.000000000 +0100
 @@ -18,6 +18,7 @@
  CPPOPTS +=	-DUSE_ACL
  CPPOPTS +=	-DUSE_XATTR
@@ -171,8 +170,8 @@
  XMK_FILE=	scpioman.mk
  
  ###########################################################################
---- star-1.5/star/gnutar.mk.selinux	2006-02-02 10:00:31.000000000 -0500
-+++ star-1.5/star/gnutar.mk	2006-02-22 10:10:09.000000000 -0500
+--- star-1.5/star/gnutar.mk.selinux	2006-11-05 02:52:19.000000000 +0100
++++ star-1.5/star/gnutar.mk	2007-01-18 15:59:13.000000000 +0100
 @@ -18,6 +18,7 @@
  CPPOPTS +=	-DUSE_ACL
  CPPOPTS +=	-DUSE_XATTR
@@ -190,8 +189,8 @@
  XMK_FILE=	gnutarman.mk
  
  ###########################################################################
---- star-1.5/star/suntar.mk.selinux	2006-02-02 10:00:31.000000000 -0500
-+++ star-1.5/star/suntar.mk	2006-02-22 10:10:09.000000000 -0500
+--- star-1.5/star/suntar.mk.selinux	2006-11-05 02:52:19.000000000 +0100
++++ star-1.5/star/suntar.mk	2007-01-18 15:59:56.000000000 +0100
 @@ -18,6 +18,7 @@
  CPPOPTS +=	-DUSE_ACL
  CPPOPTS +=	-DUSE_XATTR
@@ -209,9 +208,9 @@
  XMK_FILE=	suntarman.mk
  
  ###########################################################################
---- star-1.5/star/starsubs.h.selinux	2005-11-01 16:32:18.000000000 -0500
-+++ star-1.5/star/starsubs.h	2006-02-22 10:10:09.000000000 -0500
-@@ -301,6 +301,11 @@
+--- star-1.5/star/starsubs.h.selinux	2006-11-05 02:48:13.000000000 +0100
++++ star-1.5/star/starsubs.h	2007-01-18 16:01:07.000000000 +0100
+@@ -296,6 +296,11 @@
  extern	BOOL	get_xattr	__PR((register FINFO *info));
  extern	BOOL	set_xattr	__PR((register FINFO *info));
  extern	void	free_xattr	__PR((star_xattr_t **xattr));
@@ -223,9 +222,9 @@
  #endif
  
  /*
---- star-1.5/star/xattr.c.selinux	2006-02-13 20:00:40.000000000 -0500
-+++ star-1.5/star/xattr.c	2006-02-22 10:16:44.000000000 -0500
-@@ -181,6 +181,29 @@
+--- star-1.5/star/xattr.c.selinux	2006-09-13 18:24:20.000000000 +0200
++++ star-1.5/star/xattr.c	2007-01-18 16:02:59.000000000 +0100
+@@ -184,6 +184,29 @@
  #endif  /* USE_XATTR */
  }
  
@@ -255,7 +254,7 @@
  /* ARGSUSED */
  EXPORT BOOL
  set_xattr(info)
-@@ -194,6 +217,10 @@
+@@ -197,6 +220,10 @@
  		return (TRUE);
  
  	for (xap = info->f_xattr; xap->name != NULL; xap++) {
