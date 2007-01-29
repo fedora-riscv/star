@@ -96,7 +96,7 @@ rm -rf ${RPM_BUILD_ROOT}
 %{_mandir}/man1/spax.1*
 
 %changelog
-* Tue Aug 08 2006 Peter Vrabec <pvrabec@redhat.com> 1.5a76-2
+* Mon Jan 29 2007 Peter Vrabec <pvrabec@redhat.com> 1.5a76-2
 - fix buildreq. and rebuild
 
 * Thu Jan 18 2007 Jan Cholasta <grubber.x@gmail.com> 1.5a76-1 
