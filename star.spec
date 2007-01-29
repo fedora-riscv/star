@@ -4,17 +4,16 @@
 Summary:  An archiving tool with ACL support
 Name: star
 Version: 1.5a76
-Release: 1%{?dist}
+Release: 2%{?dist}
 URL: http://cdrecord.berlios.de/old/private/star.html
 Source: ftp://ftp.berlios.de/pub/star/alpha/%{name}-%{version}.tar.bz2
 Patch1: star-1.5-newMake.patch
 Patch2: star-1.5-selinux.patch
-
 License: CDDL
 Group: Applications/Archiving
 BuildRoot: %{_tmppath}/%{name}-%{version}-root
-BuildRequires: libattr-devel libacl-devel libtool libselinux-devel
-
+BuildRequires: libattr-devel libacl-devel libtool libselinux-devel e2fsprogs-devel
+ 
 %description
 Star saves many files together into a single tape or disk archive,
 and can restore individual files from the archive. Star supports ACL.
@@ -97,6 +96,9 @@ rm -rf ${RPM_BUILD_ROOT}
 %{_mandir}/man1/spax.1*
 
 %changelog
+* Tue Aug 08 2006 Peter Vrabec <pvrabec@redhat.com> 1.5a76-2
+- fix buildreq. and rebuild
+
 * Thu Jan 18 2007 Jan Cholasta <grubber.x@gmail.com> 1.5a76-1 
 - upgrade
 
