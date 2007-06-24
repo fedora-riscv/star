@@ -4,7 +4,7 @@
 Summary:  An archiving tool with ACL support
 Name: star
 Version: 1.5a76
-Release: 2%{?dist}
+Release: 3%{?dist}
 URL: http://cdrecord.berlios.de/old/private/star.html
 Source: ftp://ftp.berlios.de/pub/star/alpha/%{name}-%{version}.tar.bz2
 Patch1: star-1.5-newMake.patch
@@ -25,7 +25,7 @@ and can restore individual files from the archive. Star supports ACL.
 %patch2 -p1 -b .selinux
 %endif
 
-for PLAT in x86_64 ppc64 s390 s390x; do
+for PLAT in %{arm} x86_64 ppc64 s390 s390x; do
         for AFILE in gcc cc; do
                 [ ! -e RULES/${PLAT}-linux-${AFILE}.rul ] \
                 && ln -s i586-linux-${AFILE}.rul RULES/${PLAT}-linux-${AFILE}.rul
@@ -96,6 +96,9 @@ rm -rf ${RPM_BUILD_ROOT}
 %{_mandir}/man1/spax.1*
 
 %changelog
+* Sun Jun 24 2007 Peter Vrabec <pvrabec@redhat.com> 1.5a76-3
+- build star on ARM platforms (#245465)
+
 * Mon Jan 29 2007 Peter Vrabec <pvrabec@redhat.com> 1.5a76-2
 - fix buildreq. and rebuild
 
