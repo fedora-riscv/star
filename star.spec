@@ -3,8 +3,8 @@
 %endif
 Summary:  An archiving tool with ACL support
 Name: star
-Version: 1.5a76
-Release: 3%{?dist}
+Version: 1.5a84
+Release: 1%{?dist}
 URL: http://cdrecord.berlios.de/old/private/star.html
 Source: ftp://ftp.berlios.de/pub/star/alpha/%{name}-%{version}.tar.bz2
 Patch1: star-1.5-newMake.patch
@@ -57,6 +57,7 @@ rm -rf ${RPM_BUILD_ROOT}
 mkdir -p ${RPM_BUILD_ROOT}%{_mandir}/man1
 %makeinstall RPM_INSTALLDIR=${RPM_BUILD_ROOT} PARCH=%{_target_cpu} K_ARCH=%{_target_cpu} < /dev/null
 rm -rf $RPM_BUILD_ROOT/usr/share/man
+rm -rf $RPM_BUILD_ROOT/usr/share/doc/rmt
 mv $RPM_BUILD_ROOT/usr/man $RPM_BUILD_ROOT%{_mandir}
 
 # XXX Nuke unpackaged files.
@@ -85,10 +86,7 @@ rm -rf ${RPM_BUILD_ROOT}
 
 %files
 %defattr(-,root,root)
-%doc README AN* COPYING CDDL.Schily.txt README.ACL README.crash README.largefiles README.linux
-%doc README.otherbugs README.pattern README.posix-2001  README.SSPM
-%doc STARvsGNUTAR
-%doc STATUS.alpha TODO
+%doc README AN* COPYING CDDL.Schily.txt README.SSPM STATUS.alpha TODO
 %{_bindir}/star
 %{_bindir}/ustar
 %{_bindir}/spax
@@ -96,6 +94,9 @@ rm -rf ${RPM_BUILD_ROOT}
 %{_mandir}/man1/spax.1*
 
 %changelog
+* Fri Aug 24 2007 Peter Vrabec <pvrabec@redhat.com> 1.5a84-1
+- new upstream release with CVE-2007-4134 fix
+
 * Sun Jun 24 2007 Peter Vrabec <pvrabec@redhat.com> 1.5a76-3
 - build star on ARM platforms (#245465)
 
