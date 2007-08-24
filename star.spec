@@ -12,7 +12,8 @@ Patch2: star-1.5-selinux.patch
 License: CDDL
 Group: Applications/Archiving
 BuildRoot: %{_tmppath}/%{name}-%{version}-root
-BuildRequires: libattr-devel libacl-devel libtool libselinux-devel e2fsprogs-devel
+BuildRequires: libattr-devel libacl-devel libtool libselinux-devel 
+BuildRequires: e2fsprogs-devel gawk
  
 %description
 Star saves many files together into a single tape or disk archive,
