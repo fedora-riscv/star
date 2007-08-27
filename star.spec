@@ -3,16 +3,18 @@
 %endif
 Summary:  An archiving tool with ACL support
 Name: star
-Version: 1.5a76
+Version: 1.5a84
 Release: 2%{?dist}
 URL: http://cdrecord.berlios.de/old/private/star.html
 Source: ftp://ftp.berlios.de/pub/star/alpha/%{name}-%{version}.tar.bz2
 Patch1: star-1.5-newMake.patch
 Patch2: star-1.5-selinux.patch
+Patch3: star-1.5-changewarnSegv.patch
 License: CDDL
 Group: Applications/Archiving
 BuildRoot: %{_tmppath}/%{name}-%{version}-root
-BuildRequires: libattr-devel libacl-devel libtool libselinux-devel e2fsprogs-devel
+BuildRequires: libattr-devel libacl-devel libtool libselinux-devel 
+BuildRequires: e2fsprogs-devel gawk
  
 %description
 Star saves many files together into a single tape or disk archive,
@@ -24,8 +26,9 @@ and can restore individual files from the archive. Star supports ACL.
 %if %{WITH_SELINUX}
 %patch2 -p1 -b .selinux
 %endif
+%patch3 -p1 -b .changewarnSegv
 
-for PLAT in x86_64 ppc64 s390 s390x; do
+for PLAT in %{arm} x86_64 ppc64 s390 s390x; do
         for AFILE in gcc cc; do
                 [ ! -e RULES/${PLAT}-linux-${AFILE}.rul ] \
                 && ln -s i586-linux-${AFILE}.rul RULES/${PLAT}-linux-${AFILE}.rul
@@ -57,6 +60,7 @@ rm -rf ${RPM_BUILD_ROOT}
 mkdir -p ${RPM_BUILD_ROOT}%{_mandir}/man1
 %makeinstall RPM_INSTALLDIR=${RPM_BUILD_ROOT} PARCH=%{_target_cpu} K_ARCH=%{_target_cpu} < /dev/null
 rm -rf $RPM_BUILD_ROOT/usr/share/man
+rm -rf $RPM_BUILD_ROOT/usr/share/doc/rmt
 mv $RPM_BUILD_ROOT/usr/man $RPM_BUILD_ROOT%{_mandir}
 
 # XXX Nuke unpackaged files.
@@ -85,10 +89,7 @@ rm -rf ${RPM_BUILD_ROOT}
 
 %files
 %defattr(-,root,root)
-%doc README AN* COPYING CDDL.Schily.txt README.ACL README.crash README.largefiles README.linux
-%doc README.otherbugs README.pattern README.posix-2001  README.SSPM
-%doc STARvsGNUTAR
-%doc STATUS.alpha TODO
+%doc README AN* COPYING CDDL.Schily.txt README.SSPM STATUS.alpha TODO
 %{_bindir}/star
 %{_bindir}/ustar
 %{_bindir}/spax
@@ -96,6 +97,16 @@ rm -rf ${RPM_BUILD_ROOT}
 %{_mandir}/man1/spax.1*
 
 %changelog
+* Mon Aug 27 2007 Peter Vrabec <pvrabec@redhat.com> 1.5a84-2
+- fix segfault of data-change-warn option (#255261), 
+  patch from dkopecek@redhat.com
+
+* Fri Aug 24 2007 Peter Vrabec <pvrabec@redhat.com> 1.5a84-1
+- new upstream release with CVE-2007-4134 fix
+
+* Sun Jun 24 2007 Peter Vrabec <pvrabec@redhat.com> 1.5a76-3
+- build star on ARM platforms (#245465)
+
 * Mon Jan 29 2007 Peter Vrabec <pvrabec@redhat.com> 1.5a76-2
 - fix buildreq. and rebuild
 

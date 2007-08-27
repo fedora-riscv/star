@@ -1,5 +1,5 @@
---- star-1.5/DEFAULTS/Defaults.linux.newMake	2006-07-21 14:53:23.000000000 +0200
-+++ star-1.5/DEFAULTS/Defaults.linux	2007-01-18 15:41:19.000000000 +0100
+--- star-1.5/DEFAULTS/Defaults.linux.fix	2007-08-23 13:35:54.000000000 +0200
++++ star-1.5/DEFAULTS/Defaults.linux	2007-08-23 13:51:33.000000000 +0200
 @@ -8,8 +8,8 @@
  # Compiler stuff
  #
@@ -11,16 +11,14 @@
  
  ###########################################################################
  #
-@@ -28,21 +28,21 @@
- ###########################################################################
- CWARNOPTS=
+@@ -40,20 +40,20 @@ __LINUX_SRC_INCLUDE=	$(_LINUX_SRC_INCLUD
+ LINUX_SRC_INCLUDE=      $(__LINUX_SRC_INCLUDE:$(_UNIQ)no%=%)
  
--DEFINCDIRS=	$(SRCROOT)/include /usr/src/linux/include
+ DEFINCDIRS=	$(SRCROOT)/include
 -LDPATH=		-L/opt/schily/lib
--RUNPATH=	-R $(INS_BASE)/lib -R /opt/schily/lib -R $(OLIBSDIR)
-+DEFINCDIRS=	$(SRCROOT)/include
-+LDPATH=		
-+RUNPATH=	
+-RUNPATH=	-R$(INS_BASE)/lib -R/opt/schily/lib -R$(OLIBSDIR)
++LDPATH= 
++RUNPATH= 
  
  ###########################################################################
  #
