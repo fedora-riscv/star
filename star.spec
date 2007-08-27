@@ -4,11 +4,12 @@
 Summary:  An archiving tool with ACL support
 Name: star
 Version: 1.5a84
-Release: 1%{?dist}
+Release: 2%{?dist}
 URL: http://cdrecord.berlios.de/old/private/star.html
 Source: ftp://ftp.berlios.de/pub/star/alpha/%{name}-%{version}.tar.bz2
 Patch1: star-1.5-newMake.patch
 Patch2: star-1.5-selinux.patch
+Patch3: star-1.5-changewarnSegv.patch
 License: CDDL
 Group: Applications/Archiving
 BuildRoot: %{_tmppath}/%{name}-%{version}-root
@@ -25,6 +26,7 @@ and can restore individual files from the archive. Star supports ACL.
 %if %{WITH_SELINUX}
 %patch2 -p1 -b .selinux
 %endif
+%patch3 -p1 -b .changewarnSegv
 
 for PLAT in %{arm} x86_64 ppc64 s390 s390x; do
         for AFILE in gcc cc; do
@@ -95,6 +97,10 @@ rm -rf ${RPM_BUILD_ROOT}
 %{_mandir}/man1/spax.1*
 
 %changelog
+* Mon Aug 27 2007 Peter Vrabec <pvrabec@redhat.com> 1.5a84-2
+- fix segfault of data-change-warn option (#255261), 
+  patch from dkopecek@redhat.com
+
 * Fri Aug 24 2007 Peter Vrabec <pvrabec@redhat.com> 1.5a84-1
 - new upstream release with CVE-2007-4134 fix
 
