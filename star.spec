@@ -4,7 +4,7 @@
 Summary:  An archiving tool with ACL support
 Name: star
 Version: 1.5a84
-Release: 2%{?dist}
+Release: 3%{?dist}
 URL: http://cdrecord.berlios.de/old/private/star.html
 Source: ftp://ftp.berlios.de/pub/star/alpha/%{name}-%{version}.tar.bz2
 Patch1: star-1.5-newMake.patch
@@ -45,6 +45,7 @@ export MAKEPROG=gmake
 
 #make %{?_smp_mflags} PARCH=%{_target_cpu} CPPOPTX="-DNO_FSYNC" \
 make %{?_smp_mflags} PARCH=%{_target_cpu} \
+	COPTX='-O0' \
 	K_ARCH=%{_target_cpu} \
 	CONFFLAGS="%{_target_platform} --prefix=%{_prefix} \
 	--exec-prefix=%{_exec_prefix} --bindir=%{_bindir} \
@@ -97,6 +98,9 @@ rm -rf ${RPM_BUILD_ROOT}
 %{_mandir}/man1/spax.1*
 
 %changelog
+* Fri Aug 31 2007 Dan Kopecek <dkopecek@redhat.com> 1.5a84-3
+- added -O0 to COPTX (CFLAGS) (see #255261)
+
 * Mon Aug 27 2007 Peter Vrabec <pvrabec@redhat.com> 1.5a84-2
 - fix segfault of data-change-warn option (#255261), 
   patch from dkopecek@redhat.com
