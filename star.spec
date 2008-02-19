@@ -4,7 +4,7 @@
 Summary:  An archiving tool with ACL support
 Name: star
 Version: 1.5a84
-Release: 3%{?dist}
+Release: 4%{?dist}
 URL: http://cdrecord.berlios.de/old/private/star.html
 Source: ftp://ftp.berlios.de/pub/star/alpha/%{name}-%{version}.tar.bz2
 Patch1: star-1.5-newMake.patch
@@ -98,6 +98,9 @@ rm -rf ${RPM_BUILD_ROOT}
 %{_mandir}/man1/spax.1*
 
 %changelog
+* Tue Feb 19 2008 Fedora Release Engineering <rel-eng@fedoraproject.org> - 1.5a84-4
+- Autorebuild for GCC 4.3
+
 * Fri Aug 31 2007 Dan Kopecek <dkopecek@redhat.com> 1.5a84-3
 - added -O0 to COPTX (CFLAGS) (see #255261)
 
