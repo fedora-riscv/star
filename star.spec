@@ -4,7 +4,7 @@
 Summary:  An archiving tool with ACL support
 Name: star
 Version: 1.5a84
-Release: 4%{?dist}
+Release: 5%{?dist}
 URL: http://cdrecord.berlios.de/old/private/star.html
 Source: ftp://ftp.berlios.de/pub/star/alpha/%{name}-%{version}.tar.bz2
 Patch1: star-1.5-newMake.patch
@@ -28,7 +28,7 @@ and can restore individual files from the archive. Star supports ACL.
 %endif
 %patch3 -p1 -b .changewarnSegv
 
-for PLAT in %{arm} x86_64 ppc64 s390 s390x; do
+for PLAT in %{arm} x86_64 ppc64 s390 s390x sh3 sh4 sh4a; do
         for AFILE in gcc cc; do
                 [ ! -e RULES/${PLAT}-linux-${AFILE}.rul ] \
                 && ln -s i586-linux-${AFILE}.rul RULES/${PLAT}-linux-${AFILE}.rul
@@ -98,6 +98,9 @@ rm -rf ${RPM_BUILD_ROOT}
 %{_mandir}/man1/spax.1*
 
 %changelog
+* Mon May 12 2008 Peter Vrabec <pvrabec@redhat.com> 1.5a84-5
+- add super-H(sh3,4) architecture support (#442883)
+
 * Tue Feb 19 2008 Fedora Release Engineering <rel-eng@fedoraproject.org> - 1.5a84-4
 - Autorebuild for GCC 4.3
 
