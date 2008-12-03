@@ -72,8 +72,8 @@
  /*
 --- star-1.5/star/Makefile.selinux	2007-06-16 16:46:18.000000000 +0200
 +++ star-1.5/star/Makefile	2007-08-24 11:51:13.000000000 +0200
-@@ -1,64 +1,19 @@
--#ident @(#)star_fat.mk	1.21 07/06/16 
+@@ -1,67 +1,19 @@
+-#ident @(#)star_fat.mk	1.22 08/01/02 
 +#ident @(#)all.mk	1.1 05/02/16 
  ###########################################################################
 -#include		$(MAKE_M_ARCH).def
@@ -84,7 +84,7 @@
  
  #
 -# This is star_fat.mk, it creates one "fat" binary for all functionality.
-+# This is all.mk, it creates sevral binaries, one for each function.
++# This is all.mk, it creates several binaries, one for each function.
  #
 -# If you like to create non "fat" binaries, remove Makefile
 -# and copy all.mk to Makefile.
@@ -129,6 +129,9 @@
 -#LIBS=		-lunos
 -#LIBS=		-lschily -lc /usr/local/lib/gcc-gnulib
 -LIBS=		-ldeflt -lrmt -lschily $(LIB_ACL) $(LIB_ATTR) $(LIB_SOCKET)
+-#
+-#	Wenn -lfind, dann auch  $(LIB_INTL)
+-#
 -XMK_FILE=	Makefile.man starformatman.mk scpioman.mk gnutarman.mk \
 -		spaxman.mk suntarman.mk Makefile.dfl Makefile.doc
  
@@ -181,9 +184,9 @@
  #LIBS=		-lschily -lc /usr/local/lib/gcc-gnulib
 -LIBS=		-ldeflt -lrmt -lschily $(LIB_ACL) $(LIB_ATTR) $(LIB_SOCKET)
 +LIBS=		-ldeflt -lrmt -lschily $(LIB_ACL) $(LIB_ATTR) $(LIB_SOCKET) $(LIB_SELINUX)
- XMK_FILE=	Makefile.man starformatman.mk scpioman.mk gnutarman.mk \
- 		spaxman.mk suntarman.mk Makefile.dfl Makefile.doc
- 
+ #
+ #	Wenn -lfind, dann auch  $(LIB_INTL)
+ #
 --- star-1.5/star/star.c.selinux	2007-07-16 09:43:14.000000000 +0200
 +++ star-1.5/star/star.c	2007-08-24 11:51:13.000000000 +0200
 @@ -45,6 +45,10 @@

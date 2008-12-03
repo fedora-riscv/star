@@ -3,7 +3,7 @@
 %endif
 Summary:  An archiving tool with ACL support
 Name: star
-Version: 1.5a84
+Version: 1.5a89
 Release: 6%{?dist}
 URL: http://cdrecord.berlios.de/old/private/star.html
 Source: ftp://ftp.berlios.de/pub/star/alpha/%{name}-%{version}.tar.bz2
@@ -98,8 +98,11 @@ rm -rf ${RPM_BUILD_ROOT}
 %{_mandir}/man1/spax.1*
 
 %changelog
+* Wed Dec 03 2008 Ondrej Vasik <ovasik@redhat.com> 1.5a89-1
+- update to latest upstream release
+
 * Fri Jun 06 2008 Dennis Gilmore <dennis@ausil.us> 1.5a84-6
-- add sparcv9 support 
+- add sparcv9 support
 
 * Mon May 12 2008 Peter Vrabec <pvrabec@redhat.com> 1.5a84-5
 - add super-H(sh3,4) architecture support (#442883)
