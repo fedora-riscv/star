@@ -295,7 +295,7 @@
 --- star-1.5/conf/rules.cnf.in.selinux	2007-05-19 14:52:46.000000000 +0200
 +++ star-1.5/conf/rules.cnf.in	2007-08-24 11:51:13.000000000 +0200
 @@ -20,3 +20,4 @@
- LIB_SECDB = @lib_secdb@
+ LIB_GEN = @lib_gen@
  LIB_PTHREAD = @lib_pthread@
  LIB_RT = @lib_rt@
 +LIB_SELINUX = @lib_selinux@
@@ -330,7 +330,7 @@
  if test -r /dev/null; then
  	echo yes
 @@ -523,5 +537,6 @@
- AC_SUBST(lib_secdb)
+ AC_SUBST(lib_gen)
  AC_SUBST(lib_pthread)
  AC_SUBST(lib_rt)
 +AC_SUBST(lib_selinux)
