@@ -3,19 +3,21 @@
 %endif
 Summary:  An archiving tool with ACL support
 Name: star
-Version: 1.5a89
+Version: 1.5
 Release: 1%{?dist}
 URL: http://cdrecord.berlios.de/old/private/star.html
-Source: ftp://ftp.berlios.de/pub/star/alpha/%{name}-%{version}.tar.bz2
+Source: ftp://ftp.berlios.de/pub/star/%{name}-%{version}.tar.bz2
+#names.c dissapeared from upstream tarball, but is necessary for build
+Source1: names.c
 Patch1: star-1.5-newMake.patch
 Patch2: star-1.5-selinux.patch
 Patch3: star-1.5-changewarnSegv.patch
 License: CDDL
 Group: Applications/Archiving
 BuildRoot: %{_tmppath}/%{name}-%{version}-root
-BuildRequires: libattr-devel libacl-devel libtool libselinux-devel 
+BuildRequires: libattr-devel libacl-devel libtool libselinux-devel
 BuildRequires: e2fsprogs-devel gawk
- 
+
 %description
 Star saves many files together into a single tape or disk archive,
 and can restore individual files from the archive. Star supports ACL.
@@ -27,6 +29,8 @@ and can restore individual files from the archive. Star supports ACL.
 %patch2 -p1 -b .selinux
 %endif
 %patch3 -p1 -b .changewarnSegv
+cp -a %{SOURCE1} ./libfind/
+cp -a %{SOURCE1} ./star/
 
 for PLAT in %{arm} x86_64 ppc64 s390 s390x sh3 sh4 sh4a sparcv9; do
         for AFILE in gcc cc; do
@@ -45,7 +49,7 @@ export MAKEPROG=gmake
 
 #make %{?_smp_mflags} PARCH=%{_target_cpu} CPPOPTX="-DNO_FSYNC" \
 make %{?_smp_mflags} PARCH=%{_target_cpu} \
-	COPTX='-O0' \
+  COPTX='-DTRY_EXT2_FS' \
 	K_ARCH=%{_target_cpu} \
 	CONFFLAGS="%{_target_platform} --prefix=%{_prefix} \
 	--exec-prefix=%{_exec_prefix} --bindir=%{_bindir} \
@@ -60,9 +64,9 @@ export MAKEPROG=gmake
 rm -rf ${RPM_BUILD_ROOT}
 mkdir -p ${RPM_BUILD_ROOT}%{_mandir}/man1
 %makeinstall RPM_INSTALLDIR=${RPM_BUILD_ROOT} PARCH=%{_target_cpu} K_ARCH=%{_target_cpu} < /dev/null
-rm -rf $RPM_BUILD_ROOT/usr/share/man
-rm -rf $RPM_BUILD_ROOT/usr/share/doc/rmt
-mv $RPM_BUILD_ROOT/usr/man $RPM_BUILD_ROOT%{_mandir}
+rm -rf ${RPM_BUILD_ROOT}/usr/share/man
+rm -rf ${RPM_BUILD_ROOT}/usr/share/doc/rmt
+mv ${RPM_BUILD_ROOT}/usr/man ${RPM_BUILD_ROOT}%{_mandir}
 
 # XXX Nuke unpackaged files.
 ( cd ${RPM_BUILD_ROOT}
@@ -98,6 +102,11 @@ rm -rf ${RPM_BUILD_ROOT}
 %{_mandir}/man1/spax.1*
 
 %changelog
+* Tue Jan 27 2009 Ondrej Vasik <ovasik@redhat.com> 1.5-1
+- use final instead of beta
+- ship missing names.c separately
+- enable optimalization again
+
 * Wed Dec 03 2008 Ondrej Vasik <ovasik@redhat.com> 1.5a89-1
 - update to latest upstream release
 
