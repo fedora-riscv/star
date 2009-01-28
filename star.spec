@@ -4,14 +4,13 @@
 Summary:  An archiving tool with ACL support
 Name: star
 Version: 1.5
-Release: 1%{?dist}
+Release: 2%{?dist}
 URL: http://cdrecord.berlios.de/old/private/star.html
 Source: ftp://ftp.berlios.de/pub/star/%{name}-%{version}.tar.bz2
-#names.c dissapeared from upstream tarball, but is necessary for build
-Source1: names.c
 Patch1: star-1.5-newMake.patch
 Patch2: star-1.5-selinux.patch
 Patch3: star-1.5-changewarnSegv.patch
+Patch4: star-1.5-removenames_c.patch
 License: CDDL
 Group: Applications/Archiving
 BuildRoot: %{_tmppath}/%{name}-%{version}-root
@@ -29,8 +28,7 @@ and can restore individual files from the archive. Star supports ACL.
 %patch2 -p1 -b .selinux
 %endif
 %patch3 -p1 -b .changewarnSegv
-cp -a %{SOURCE1} ./libfind/
-cp -a %{SOURCE1} ./star/
+%patch4 -p1 -b .removenames
 
 for PLAT in %{arm} x86_64 ppc64 s390 s390x sh3 sh4 sh4a sparcv9; do
         for AFILE in gcc cc; do
@@ -102,6 +100,9 @@ rm -rf ${RPM_BUILD_ROOT}
 %{_mandir}/man1/spax.1*
 
 %changelog
+* Wed Jan 28 2009 Ondrej Vasik <ovasik@redhat.com> 1.5-2
+- remove names.c requirements from non-fat Makefiles,
+  do not ship names.c (#255261 for details)
 * Tue Jan 27 2009 Ondrej Vasik <ovasik@redhat.com> 1.5-1
 - use final instead of beta
 - ship missing names.c separately
