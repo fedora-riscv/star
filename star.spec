@@ -4,13 +4,14 @@
 Summary:  An archiving tool with ACL support
 Name: star
 Version: 1.5
-Release: 3%{?dist}
+Release: 4%{?dist}
 URL: http://cdrecord.berlios.de/old/private/star.html
 Source: ftp://ftp.berlios.de/pub/star/%{name}-%{version}.tar.bz2
 Patch1: star-1.5-newMake.patch
 Patch2: star-1.5-selinux.patch
 Patch3: star-1.5-changewarnSegv.patch
 Patch4: star-1.5-removenames_c.patch
+Patch5: star-1.5-stdioconflict.patch
 License: CDDL
 Group: Applications/Archiving
 BuildRoot: %{_tmppath}/%{name}-%{version}-root
@@ -29,6 +30,7 @@ and can restore individual files from the archive. Star supports ACL.
 %endif
 %patch3 -p1 -b .changewarnSegv
 %patch4 -p1 -b .removenames
+%patch5 -p1 -b .conflict
 
 for PLAT in %{arm} x86_64 ppc64 s390 s390x sh3 sh4 sh4a sparcv9; do
         for AFILE in gcc cc; do
@@ -100,6 +102,10 @@ rm -rf ${RPM_BUILD_ROOT}
 %{_mandir}/man1/spax.1*
 
 %changelog
+* Wed Apr 08 2009 Ondrej Vasik <ovasik@redhat.com> 1.5-4
+- fix build failure due to symbols conflicting
+  with stdio(#494213)
+
 * Wed Feb 25 2009 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.5-3
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_11_Mass_Rebuild
 
