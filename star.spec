@@ -4,7 +4,7 @@
 Summary:  An archiving tool with ACL support
 Name: star
 Version: 1.5
-Release: 4%{?dist}
+Release: 5%{?dist}
 URL: http://cdrecord.berlios.de/old/private/star.html
 Source: ftp://ftp.berlios.de/pub/star/%{name}-%{version}.tar.bz2
 Patch1: star-1.5-newMake.patch
@@ -40,7 +40,6 @@ for PLAT in %{arm} x86_64 ppc64 s390 s390x sh3 sh4 sh4a sparcv9; do
 done
 
 %build
-export COPTOPT="$RPM_OPT_FLAGS"
 export MAKEPROG=gmake
 # Autoconfiscate
 (cd conf; AC_MACRODIR=. AWK=gawk ./autoconf)
@@ -49,7 +48,7 @@ export MAKEPROG=gmake
 
 #make %{?_smp_mflags} PARCH=%{_target_cpu} CPPOPTX="-DNO_FSYNC" \
 make %{?_smp_mflags} PARCH=%{_target_cpu} \
-  COPTX='-DTRY_EXT2_FS' \
+	COPTX="$RPM_OPT_FLAGS -DTRY_EXT2_FS" CC="%{__cc}" \
 	K_ARCH=%{_target_cpu} \
 	CONFFLAGS="%{_target_platform} --prefix=%{_prefix} \
 	--exec-prefix=%{_exec_prefix} --bindir=%{_bindir} \
@@ -102,6 +101,10 @@ rm -rf ${RPM_BUILD_ROOT}
 %{_mandir}/man1/spax.1*
 
 %changelog
+* Sun May 10 2009 Ville Skyttä <ville.skytta at iki.fi> - 1.5-5
+- Build with $RPM_OPT_FLAGS.
+- Convert specfile to UTF-8.
+
 * Wed Apr 08 2009 Ondrej Vasik <ovasik@redhat.com> 1.5-4
 - fix build failure due to symbols conflicting
   with stdio(#494213)
@@ -257,5 +260,5 @@ rm -rf ${RPM_BUILD_ROOT}
 - update to 1.5a08.
 - build from cvs.
 
-* Wed Jun 26 2002 Trond Eivind Glomsr�d <teg@redhat.com> 1.5a04
+* Wed Jun 26 2002 Trond Eivind Glomsrød <teg@redhat.com> 1.5a04
 - Initial build. Alpha version - it's needed for ACLs.
