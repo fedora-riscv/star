@@ -4,7 +4,7 @@
 Summary:  An archiving tool with ACL support
 Name: star
 Version: 1.5
-Release: 5%{?dist}
+Release: 6%{?dist}
 URL: http://cdrecord.berlios.de/old/private/star.html
 Source: ftp://ftp.berlios.de/pub/star/%{name}-%{version}.tar.bz2
 Patch1: star-1.5-newMake.patch
@@ -101,6 +101,9 @@ rm -rf ${RPM_BUILD_ROOT}
 %{_mandir}/man1/spax.1*
 
 %changelog
+* Sun Jul 26 2009 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.5-6
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_12_Mass_Rebuild
+
 * Sun May 10 2009 Ville Skyttä <ville.skytta at iki.fi> - 1.5-5
 - Build with $RPM_OPT_FLAGS.
 - Convert specfile to UTF-8.
