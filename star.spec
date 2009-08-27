@@ -4,7 +4,7 @@
 Summary:  An archiving tool with ACL support
 Name: star
 Version: 1.5
-Release: 7%{?dist}
+Release: 8%{?dist}
 URL: http://cdrecord.berlios.de/old/private/star.html
 Source: ftp://ftp.berlios.de/pub/star/%{name}-%{version}.tar.bz2
 
@@ -76,6 +76,7 @@ mkdir -p ${RPM_BUILD_ROOT}%{_mandir}/man1
 rm -rf ${RPM_BUILD_ROOT}/usr/share/man
 rm -rf ${RPM_BUILD_ROOT}/usr/share/doc/rmt
 mv ${RPM_BUILD_ROOT}/usr/man ${RPM_BUILD_ROOT}%{_mandir}
+ln -s star.1.gz ${RPM_BUILD_ROOT}%{_mandir}/man1/ustar.1
 
 # XXX Nuke unpackaged files.
 ( cd ${RPM_BUILD_ROOT}
@@ -109,8 +110,12 @@ rm -rf ${RPM_BUILD_ROOT}
 %{_bindir}/spax
 %{_mandir}/man1/star.1*
 %{_mandir}/man1/spax.1*
+%{_mandir}/man1/ustar.1*
 
 %changelog
+* Thu Aug 27 2009 Ondrej Vasik <ovasik@redhat.com> 1.5-8
+- provide symlinked manpage for ustar
+
 * Thu Aug 27 2009 Ondrej Vasik <ovasik@redhat.com> 1.5-7
 - Merge review (#226434) changes: convert AN-1.5 to utf-8,
   spec file cosmetic/policy changes, ship README.linux in doc
