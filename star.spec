@@ -4,17 +4,24 @@
 Summary:  An archiving tool with ACL support
 Name: star
 Version: 1.5
-Release: 6%{?dist}
+Release: 7%{?dist}
 URL: http://cdrecord.berlios.de/old/private/star.html
 Source: ftp://ftp.berlios.de/pub/star/%{name}-%{version}.tar.bz2
+
+#use gcc for compilation, change defaults for Linux
 Patch1: star-1.5-newMake.patch
+#add SELinux support to star(#)
 Patch2: star-1.5-selinux.patch
+#do not segfault with data-change-warn option (#255261)
 Patch3: star-1.5-changewarnSegv.patch
+#remove non existing source file in nonfat-makefiles
 Patch4: star-1.5-removenames_c.patch
+#do not conflict with glibc stdio functions (#494213)
 Patch5: star-1.5-stdioconflict.patch
+
 License: CDDL
 Group: Applications/Archiving
-BuildRoot: %{_tmppath}/%{name}-%{version}-root
+BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
 BuildRequires: libattr-devel libacl-devel libtool libselinux-devel
 BuildRequires: e2fsprogs-devel gawk
 
@@ -31,12 +38,15 @@ and can restore individual files from the archive. Star supports ACL.
 %patch3 -p1 -b .changewarnSegv
 %patch4 -p1 -b .removenames
 %patch5 -p1 -b .conflict
+iconv -f iso_8859-1 -t utf-8 AN-1.5 >AN-1.5_utf8
+mv AN-1.5_utf8 AN-1.5
+cp -a READMEs/README.linux .
 
 for PLAT in %{arm} x86_64 ppc64 s390 s390x sh3 sh4 sh4a sparcv9; do
-        for AFILE in gcc cc; do
-                [ ! -e RULES/${PLAT}-linux-${AFILE}.rul ] \
-                && ln -s i586-linux-${AFILE}.rul RULES/${PLAT}-linux-${AFILE}.rul
-        done
+    for AFILE in gcc cc; do
+            [ ! -e RULES/${PLAT}-linux-${AFILE}.rul ] \
+            && ln -s i586-linux-${AFILE}.rul RULES/${PLAT}-linux-${AFILE}.rul
+    done
 done
 
 %build
@@ -48,15 +58,15 @@ export MAKEPROG=gmake
 
 #make %{?_smp_mflags} PARCH=%{_target_cpu} CPPOPTX="-DNO_FSYNC" \
 make %{?_smp_mflags} PARCH=%{_target_cpu} \
-	COPTX="$RPM_OPT_FLAGS -DTRY_EXT2_FS" CC="%{__cc}" \
-	K_ARCH=%{_target_cpu} \
-	CONFFLAGS="%{_target_platform} --prefix=%{_prefix} \
-	--exec-prefix=%{_exec_prefix} --bindir=%{_bindir} \
-	--sbindir=%{_sbindir} --sysconfdir=%{_sysconfdir} \
-	--datadir=%{_datadir} --includedir=%{_includedir} \
-	--libdir=%{_libdir} --libexec=%{_libexecdir} \
-	--localstatedir=%{_localstatedir} --sharedstatedir=%{_sharedstatedir} \
-	--mandir=%{_mandir} --infodir=%{_infodir}" < /dev/null
+COPTX="$RPM_OPT_FLAGS -DTRY_EXT2_FS" CC="%{__cc}" \
+K_ARCH=%{_target_cpu} \
+CONFFLAGS="%{_target_platform} --prefix=%{_prefix} \
+    --exec-prefix=%{_exec_prefix} --bindir=%{_bindir} \
+    --sbindir=%{_sbindir} --sysconfdir=%{_sysconfdir} \
+    --datadir=%{_datadir} --includedir=%{_includedir} \
+    --libdir=%{_libdir} --libexec=%{_libexecdir} \
+    --localstatedir=%{_localstatedir} --sharedstatedir=%{_sharedstatedir} \
+    --mandir=%{_mandir} --infodir=%{_infodir}" < /dev/null
 
 %install
 export MAKEPROG=gmake
@@ -93,7 +103,7 @@ rm -rf ${RPM_BUILD_ROOT}
 
 %files
 %defattr(-,root,root)
-%doc README AN* COPYING CDDL.Schily.txt README.SSPM STATUS.alpha TODO
+%doc README AN* COPYING CDDL.Schily.txt README.SSPM STATUS.alpha TODO README.linux
 %{_bindir}/star
 %{_bindir}/ustar
 %{_bindir}/spax
@@ -101,6 +111,10 @@ rm -rf ${RPM_BUILD_ROOT}
 %{_mandir}/man1/spax.1*
 
 %changelog
+* Thu Aug 27 2009 Ondrej Vasik <ovasik@redhat.com> 1.5-7
+- Merge review (#226434) changes: convert AN-1.5 to utf-8,
+  spec file cosmetic/policy changes, ship README.linux in doc
+
 * Sun Jul 26 2009 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.5-6
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_12_Mass_Rebuild
 
@@ -118,6 +132,7 @@ rm -rf ${RPM_BUILD_ROOT}
 * Wed Jan 28 2009 Ondrej Vasik <ovasik@redhat.com> 1.5-2
 - remove names.c requirements from non-fat Makefiles,
   do not ship names.c (#255261 for details)
+
 * Tue Jan 27 2009 Ondrej Vasik <ovasik@redhat.com> 1.5-1
 - use final instead of beta
 - ship missing names.c separately
@@ -139,7 +154,7 @@ rm -rf ${RPM_BUILD_ROOT}
 - added -O0 to COPTX (CFLAGS) (see #255261)
 
 * Mon Aug 27 2007 Peter Vrabec <pvrabec@redhat.com> 1.5a84-2
-- fix segfault of data-change-warn option (#255261), 
+- fix segfault of data-change-warn option (#255261),
   patch from dkopecek@redhat.com
 
 * Fri Aug 24 2007 Peter Vrabec <pvrabec@redhat.com> 1.5a84-1
@@ -151,7 +166,7 @@ rm -rf ${RPM_BUILD_ROOT}
 * Mon Jan 29 2007 Peter Vrabec <pvrabec@redhat.com> 1.5a76-2
 - fix buildreq. and rebuild
 
-* Thu Jan 18 2007 Jan Cholasta <grubber.x@gmail.com> 1.5a76-1 
+* Thu Jan 18 2007 Jan Cholasta <grubber.x@gmail.com> 1.5a76-1
 - upgrade
 
 * Tue Aug 08 2006 Peter Vrabec <pvrabec@redhat.com> 1.5a75-1
@@ -198,7 +213,7 @@ rm -rf ${RPM_BUILD_ROOT}
 - Disable fat binary as per star/Makefile, update star-1.5-selinux.patch for
   the various *.mk files used in that case
 - Axe /usr/share/man/man1/match.1*, /usr/etc/default/rmt too
-- Explicit listing in %files, allow for compressed or plain manpages
+- Explicit listing in %%files, allow for compressed or plain manpages
 
 * Fri Aug 26 2005 Peter Vrabec <pvrabec@redhat.com>
 - do not remove star_fat
@@ -207,7 +222,7 @@ rm -rf ${RPM_BUILD_ROOT}
 - upgrade  1.5a64-1
 
 * Thu Aug 04 2005 Karsten Hopp <karsten@redhat.de> 1.5a54-3
-- remove /usr/bin/tar symlink 
+- remove /usr/bin/tar symlink
 
 * Fri Mar 18 2005 Peter Vrabec <pvrabec@redhat.com>
 - rebuilt
