@@ -50,9 +50,7 @@ done
 %build
 export MAKEPROG=gmake
 # Autoconfiscate
-(cd conf; AC_MACRODIR=. AWK=gawk ./autoconf)
-# Disable fat binary
-(cd star; rm Makefile; cp all.mk Makefile)
+(cd autoconf; AC_MACRODIR=. AWK=gawk ./autoconf)
 
 #make %{?_smp_mflags} PARCH=%{_target_cpu} CPPOPTX="-DNO_FSYNC" \
 make %{?_smp_mflags} PARCH=%{_target_cpu} \
