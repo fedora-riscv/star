@@ -3,8 +3,8 @@
 %endif
 Summary:  An archiving tool with ACL support
 Name: star
-Version: 1.5
-Release: 8%{?dist}
+Version: 1.5.1
+Release: 1%{?dist}
 URL: http://cdrecord.berlios.de/old/private/star.html
 Source: ftp://ftp.berlios.de/pub/star/%{name}-%{version}.tar.bz2
 
@@ -14,10 +14,8 @@ Patch1: star-1.5-newMake.patch
 Patch2: star-1.5-selinux.patch
 #do not segfault with data-change-warn option (#255261)
 Patch3: star-1.5-changewarnSegv.patch
-#remove non existing source file in nonfat-makefiles
-Patch4: star-1.5-removenames_c.patch
 #do not conflict with glibc stdio functions (#494213)
-Patch5: star-1.5-stdioconflict.patch
+Patch4: star-1.5-stdioconflict.patch
 
 License: CDDL
 Group: Applications/Archiving
@@ -30,14 +28,14 @@ Star saves many files together into a single tape or disk archive,
 and can restore individual files from the archive. Star supports ACL.
 
 %prep
-%setup -q -n star-1.5
+%setup -q
 %patch1 -p1 -b .newMake
 %if %{WITH_SELINUX}
 %patch2 -p1 -b .selinux
 %endif
 %patch3 -p1 -b .changewarnSegv
-%patch4 -p1 -b .removenames
-%patch5 -p1 -b .conflict
+%patch4 -p1 -b .stdio
+cp -a star/all.mk star/Makefile
 iconv -f iso_8859-1 -t utf-8 AN-1.5 >AN-1.5_utf8
 mv AN-1.5_utf8 AN-1.5
 cp -a READMEs/README.linux .
@@ -80,7 +78,7 @@ ln -s star.1.gz ${RPM_BUILD_ROOT}%{_mandir}/man1/ustar.1
 
 # XXX Nuke unpackaged files.
 ( cd ${RPM_BUILD_ROOT}
-  rm -f .%{_prefix}%{_sysconfdir}/default/rmt
+  rm -f .%{_sysconfdir}/default/rmt
   rm -f .%{_bindir}/mt
   rm -f .%{_bindir}/smt
   rm -f .%{_bindir}/tartest
@@ -113,6 +111,9 @@ rm -rf ${RPM_BUILD_ROOT}
 %{_mandir}/man1/ustar.1*
 
 %changelog
+* Wed Jan 13 2010 Ondrej Vasik <ovasik@redhat.com> 1.5.1-1
+- new upstream release 1.5.1
+
 * Thu Aug 27 2009 Ondrej Vasik <ovasik@redhat.com> 1.5-8
 - provide symlinked manpage for ustar
 
