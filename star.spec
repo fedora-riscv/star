@@ -4,7 +4,7 @@
 Summary:  An archiving tool with ACL support
 Name: star
 Version: 1.5.1
-Release: 1%{?dist}
+Release: 2%{?dist}
 URL: http://cdrecord.berlios.de/old/private/star.html
 Source: ftp://ftp.berlios.de/pub/star/%{name}-%{version}.tar.bz2
 
@@ -16,6 +16,8 @@ Patch2: star-1.5-selinux.patch
 Patch3: star-1.5-changewarnSegv.patch
 #do not conflict with glibc stdio functions (#494213)
 Patch4: star-1.5-stdioconflict.patch
+#Prevent buffer overflow for filenames with length of 100 characters (#556664)
+Patch5: star-1.5.1-bufferoverflow.patch
 
 License: CDDL
 Group: Applications/Archiving
@@ -35,6 +37,7 @@ and can restore individual files from the archive. Star supports ACL.
 %endif
 %patch3 -p1 -b .changewarnSegv
 %patch4 -p1 -b .stdio
+%patch5 -p1 -b .namesoverflow
 cp -a star/all.mk star/Makefile
 iconv -f iso_8859-1 -t utf-8 AN-1.5 >AN-1.5_utf8
 mv AN-1.5_utf8 AN-1.5
@@ -109,6 +112,10 @@ rm -rf ${RPM_BUILD_ROOT}
 %{_mandir}/man1/ustar.1*
 
 %changelog
+* Wed Feb 03 2010 Ondrej Vasik <ovasik@redhat.com> 1.5.1-2
+- fix buffer overflow for files with names of length
+  100 chars(#556664)
+
 * Wed Jan 13 2010 Ondrej Vasik <ovasik@redhat.com> 1.5.1-1
 - new upstream release 1.5.1
 
