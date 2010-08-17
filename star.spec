@@ -4,7 +4,7 @@
 Summary:  An archiving tool with ACL support
 Name: star
 Version: 1.5.1
-Release: 2%{?dist}
+Release: 3%{?dist}
 URL: http://cdrecord.berlios.de/old/private/star.html
 Source: ftp://ftp.berlios.de/pub/star/%{name}-%{version}.tar.bz2
 
@@ -18,6 +18,8 @@ Patch3: star-1.5-changewarnSegv.patch
 Patch4: star-1.5-stdioconflict.patch
 #Prevent buffer overflow for filenames with length of 100 characters (#556664)
 Patch5: star-1.5.1-bufferoverflow.patch
+#Fix some invalid manpage references (#624612)
+Patch6: star-1.5.1-manpagereferences.patch
 
 License: CDDL
 Group: Applications/Archiving
@@ -38,9 +40,12 @@ and can restore individual files from the archive. Star supports ACL.
 %patch3 -p1 -b .changewarnSegv
 %patch4 -p1 -b .stdio
 %patch5 -p1 -b .namesoverflow
+%patch6 -p1 -b .references
 cp -a star/all.mk star/Makefile
 iconv -f iso_8859-1 -t utf-8 AN-1.5 >AN-1.5_utf8
 mv AN-1.5_utf8 AN-1.5
+iconv -f iso_8859-1 -t utf-8 star/star.4 >star/star.4_utf8
+mv star/star.4_utf8 star/star.4
 cp -a READMEs/README.linux .
 
 for PLAT in %{arm} x86_64 ppc64 s390 s390x sh3 sh4 sh4a sparcv9; do
@@ -70,11 +75,11 @@ CONFFLAGS="%{_target_platform} --prefix=%{_prefix} \
 %install
 export MAKEPROG=gmake
 rm -rf ${RPM_BUILD_ROOT}
-mkdir -p ${RPM_BUILD_ROOT}%{_mandir}/man1
+mkdir -p ${RPM_BUILD_ROOT}%{_mandir}/man4
 %makeinstall RPM_INSTALLDIR=${RPM_BUILD_ROOT} PARCH=%{_target_cpu} K_ARCH=%{_target_cpu} < /dev/null
-rm -rf ${RPM_BUILD_ROOT}/usr/share/man
 rm -rf ${RPM_BUILD_ROOT}/usr/share/doc/rmt
-mv ${RPM_BUILD_ROOT}/usr/man ${RPM_BUILD_ROOT}%{_mandir}
+mv ${RPM_BUILD_ROOT}/usr/man/man5/star.5 ${RPM_BUILD_ROOT}%{_mandir}/man4/star.4
+mv ${RPM_BUILD_ROOT}/usr/man/* ${RPM_BUILD_ROOT}%{_mandir}
 ln -s star.1.gz ${RPM_BUILD_ROOT}%{_mandir}/man1/ustar.1
 
 # XXX Nuke unpackaged files.
@@ -110,8 +115,13 @@ rm -rf ${RPM_BUILD_ROOT}
 %{_mandir}/man1/star.1*
 %{_mandir}/man1/spax.1*
 %{_mandir}/man1/ustar.1*
+%{_mandir}/man4/star.4*
 
 %changelog
+* Tue Aug 17 2010 Ondrej Vasik <ovasik@redhat.com> 1.5.1-3
+- Fix some invalid manpage references (#624612)
+- ship star.4 manpage with star format description
+
 * Wed Feb 03 2010 Ondrej Vasik <ovasik@redhat.com> 1.5.1-2
 - fix buffer overflow for files with names of length
   100 chars(#556664)
