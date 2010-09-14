@@ -18,4 +18,4 @@ diff -urNp star-1.5.1-orig/star/longnames.c star-1.5.1/star/longnames.c
 +		strncpy(ptb->dbuf.t_name, &np[1], props.pr_maxsname);
  	strncpy(ptb->dbuf.t_prefix, name, np - name);
  	info->f_flags |= F_SPLIT_NAME;
- 	return (TRUE); 
+ 	return (TRUE);
