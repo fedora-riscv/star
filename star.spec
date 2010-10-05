@@ -4,7 +4,7 @@
 Summary:  An archiving tool with ACL support
 Name: star
 Version: 1.5.1
-Release: 4%{?dist}
+Release: 4%{?dist}.1
 URL: http://cdrecord.berlios.de/old/private/star.html
 Source: ftp://ftp.berlios.de/pub/star/%{name}-%{version}.tar.bz2
 
@@ -118,6 +118,9 @@ rm -rf ${RPM_BUILD_ROOT}
 %{_mandir}/man4/star.4*
 
 %changelog
+* Tue Oct 05 2010 jkeating - 1.5.1-4.1
+- Rebuilt for gcc bug 634757
+
 * Wed Sep 15 2010 Ondrej Vasik <ovasik@redhat.com> 1.5.1-4
 - fix another instance of buffer overflow for files with
   long names(#632384)
