@@ -4,7 +4,7 @@
 Summary:  An archiving tool with ACL support
 Name: star
 Version: 1.5.1
-Release: 5%{?dist}
+Release: 6%{?dist}
 URL: http://cdrecord.berlios.de/old/private/star.html
 Source: ftp://ftp.berlios.de/pub/star/%{name}-%{version}.tar.bz2
 
@@ -121,8 +121,11 @@ rm -rf ${RPM_BUILD_ROOT}
 %{_mandir}/man4/star.4*
 
 %changelog
-* Tue Jan 04 2011 Ondrej Vasik <ovasik@redhat.com> 1.5.1-5
+* Tue Jan 04 2011 Ondrej Vasik <ovasik@redhat.com> 1.5.1-6
 - fix segfault with multivol option due to signedness(#666015)
+
+* Wed Sep 29 2010 jkeating - 1.5.1-5
+- Rebuilt for gcc bug 634757
 
 * Tue Sep 14 2010 Ondrej Vasik <ovasik@redhat.com> 1.5.1-4
 - fix another instance of buffer overflow for files with
