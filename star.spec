@@ -4,7 +4,7 @@
 Summary:  An archiving tool with ACL support
 Name: star
 Version: 1.5.1
-Release: 4%{?dist}.1
+Release: 5%{?dist}
 URL: http://cdrecord.berlios.de/old/private/star.html
 Source: ftp://ftp.berlios.de/pub/star/%{name}-%{version}.tar.bz2
 
@@ -20,6 +20,8 @@ Patch4: star-1.5-stdioconflict.patch
 Patch5: star-1.5.1-bufferoverflow.patch
 #Fix some invalid manpage references (#624612)
 Patch6: star-1.5.1-manpagereferences.patch
+#fix signedness segfault with multivol option(#666015)
+Patch7: star-1.5.1-multivolsigsegv.patch
 
 License: CDDL
 Group: Applications/Archiving
@@ -41,6 +43,7 @@ and can restore individual files from the archive. Star supports ACL.
 %patch4 -p1 -b .stdio
 %patch5 -p1 -b .namesoverflow
 %patch6 -p1 -b .references
+%patch7 -p1 -b .multivol
 cp -a star/all.mk star/Makefile
 iconv -f iso_8859-1 -t utf-8 AN-1.5 >AN-1.5_utf8
 mv AN-1.5_utf8 AN-1.5
@@ -118,6 +121,9 @@ rm -rf ${RPM_BUILD_ROOT}
 %{_mandir}/man4/star.4*
 
 %changelog
+* Tue Jan 04 2011 Ondrej Vasik <ovasik@redhat.com> 1.5.1-5
+- fix segfault with multivol option due to signedness(#666015)
+
 * Tue Oct 05 2010 jkeating - 1.5.1-4.1
 - Rebuilt for gcc bug 634757
 
