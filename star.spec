@@ -4,7 +4,7 @@
 Summary:  An archiving tool with ACL support
 Name: star
 Version: 1.5.1
-Release: 6%{?dist}
+Release: 7%{?dist}
 URL: http://cdrecord.berlios.de/old/private/star.html
 Source: ftp://ftp.berlios.de/pub/star/%{name}-%{version}.tar.bz2
 
@@ -121,6 +121,9 @@ rm -rf ${RPM_BUILD_ROOT}
 %{_mandir}/man4/star.4*
 
 %changelog
+* Wed Feb 09 2011 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.5.1-7
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_15_Mass_Rebuild
+
 * Tue Jan 04 2011 Ondrej Vasik <ovasik@redhat.com> 1.5.1-6
 - fix segfault with multivol option due to signedness(#666015)
 
