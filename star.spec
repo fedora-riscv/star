@@ -4,7 +4,7 @@
 Summary:  An archiving tool with ACL support
 Name: star
 Version: 1.5.1
-Release: 9%{?dist}
+Release: 10%{?dist}
 URL: http://cdrecord.berlios.de/old/private/star.html
 Source: ftp://ftp.berlios.de/pub/star/%{name}-%{version}.tar.bz2
 
@@ -22,6 +22,8 @@ Patch5: star-1.5.1-bufferoverflow.patch
 Patch6: star-1.5.1-manpagereferences.patch
 #fix signedness segfault with multivol option(#666015)
 Patch7: star-1.5.1-multivolsigsegv.patch
+# do not crash when xattrs are not set on all files (#861848)
+Patch8: star-1.5.1-selinux-segfault.patch
 
 License: CDDL
 Group: Applications/Archiving
@@ -44,6 +46,7 @@ and can restore individual files from the archive. Star supports ACL.
 %patch5 -p1 -b .namesoverflow
 %patch6 -p1 -b .references
 %patch7 -p1 -b .multivol
+%patch8 -p1 -b .selinux-segfault
 cp -a star/all.mk star/Makefile
 iconv -f iso_8859-1 -t utf-8 AN-1.5 >AN-1.5_utf8
 mv AN-1.5_utf8 AN-1.5
@@ -64,6 +67,7 @@ export MAKEPROG=gmake
 (cd autoconf; AC_MACRODIR=. AWK=gawk ./autoconf)
 
 #make %{?_smp_mflags} PARCH=%{_target_cpu} CPPOPTX="-DNO_FSYNC" \
+# ~~> enable debug by COPTX='-g3 -O0' LDOPTX='-g3 -O0'
 make %{?_smp_mflags} PARCH=%{_target_cpu} \
 COPTX="$RPM_OPT_FLAGS -DTRY_EXT2_FS" CC="%{__cc}" \
 K_ARCH=%{_target_cpu} \
@@ -121,6 +125,10 @@ rm -rf ${RPM_BUILD_ROOT}
 %{_mandir}/man4/star.4*
 
 %changelog
+* Thu Oct 18 2012 Pavel Raiskup <praiskup@redhat.com> - 1.5.1-10
+- do not crash during extracting if extended attributes are not set on all
+  archived files (#861848)
+
 * Sat Jul 21 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.5.1-9
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
 
