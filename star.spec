@@ -24,6 +24,8 @@ Patch6: star-1.5.1-manpagereferences.patch
 Patch7: star-1.5.1-multivolsigsegv.patch
 # do not crash when xattrs are not set on all files (#861848)
 Patch8: star-1.5.1-selinux-segfault.patch
+# note that the H=crc format uses Sum32 algorithm, not CRC
+Patch9: star-1.5.1-crc.patch
 
 License: CDDL
 Group: Applications/Archiving
@@ -47,6 +49,7 @@ and can restore individual files from the archive. Star supports ACL.
 %patch6 -p1 -b .references
 %patch7 -p1 -b .multivol
 %patch8 -p1 -b .selinux-segfault
+%patch9 -p1 -b .crc
 cp -a star/all.mk star/Makefile
 iconv -f iso_8859-1 -t utf-8 AN-1.5 >AN-1.5_utf8
 mv AN-1.5_utf8 AN-1.5
@@ -128,6 +131,7 @@ rm -rf ${RPM_BUILD_ROOT}
 * Thu Oct 18 2012 Pavel Raiskup <praiskup@redhat.com> - 1.5.1-10
 - do not crash during extracting if extended attributes are not set on all
   archived files (#861848)
+- note in man page that H=crc format uses Sum32 algorithm (FIPS refuses CRC)
 
 * Sat Jul 21 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.5.1-9
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
