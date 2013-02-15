@@ -4,7 +4,7 @@
 Summary:  An archiving tool with ACL support
 Name: star
 Version: 1.5.1
-Release: 10%{?dist}
+Release: 11%{?dist}
 URL: http://cdrecord.berlios.de/old/private/star.html
 Source: ftp://ftp.berlios.de/pub/star/%{name}-%{version}.tar.bz2
 
@@ -128,6 +128,9 @@ rm -rf ${RPM_BUILD_ROOT}
 %{_mandir}/man4/star.4*
 
 %changelog
+* Fri Feb 15 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.5.1-11
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_19_Mass_Rebuild
+
 * Thu Oct 18 2012 Pavel Raiskup <praiskup@redhat.com> - 1.5.1-10
 - do not crash during extracting if extended attributes are not set on all
   archived files (#861848)
