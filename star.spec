@@ -4,7 +4,7 @@
 Summary:  An archiving tool with ACL support
 Name: star
 Version: 1.5.1
-Release: 11%{?dist}
+Release: 12%{?dist}
 URL: http://cdrecord.berlios.de/old/private/star.html
 Source: ftp://ftp.berlios.de/pub/star/%{name}-%{version}.tar.bz2
 
@@ -100,7 +100,6 @@ ln -s star.1.gz ${RPM_BUILD_ROOT}%{_mandir}/man1/ustar.1
   rm -f .%{_bindir}/tartest
   rm -f .%{_bindir}/tar
   rm -f .%{_bindir}/gnutar
-  rm -f .%{_bindir}/scpio
   rm -f .%{_bindir}/star_fat
   rm -f .%{_bindir}/star_sym
   rm -f .%{_bindir}/suntar
@@ -109,7 +108,7 @@ ln -s star.1.gz ${RPM_BUILD_ROOT}%{_mandir}/man1/ustar.1
   rm -rf .%{_prefix}/lib
   rm -rf .%{_mandir}/man5
   rm -rf .%{_mandir}/man3
-  rm -rf .%{_mandir}/man1/{tartest,rmt,gnutar,scpio,smt,suntar,match}.1*
+  rm -rf .%{_mandir}/man1/{tartest,rmt,gnutar,smt,suntar,match}.1*
   rm -rf .%{_sbindir}
 )
 
@@ -122,12 +121,17 @@ rm -rf ${RPM_BUILD_ROOT}
 %{_bindir}/star
 %{_bindir}/ustar
 %{_bindir}/spax
+%{_bindir}/scpio
 %{_mandir}/man1/star.1*
 %{_mandir}/man1/spax.1*
 %{_mandir}/man1/ustar.1*
+%{_mandir}/man1/scpio.1*
 %{_mandir}/man4/star.4*
 
 %changelog
+* Thu Mar 21 2013 Pavel Raiskup <praiskup@redhat.com> - 1.5.1-12
+- package also the 'scpio' utility (#771926)
+
 * Fri Feb 15 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.5.1-11
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_19_Mass_Rebuild
 
