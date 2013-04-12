@@ -23,6 +23,12 @@ Patch6: star-1.5.1-selinux-segfault.patch
 # note that the H=crc format uses Sum32 algorithm, not CRC
 Patch7: star-1.5.1-crc.patch
 
+# fix man-page-day objections
+# ~> proposed upstream:
+#    https://lists.berlios.de/pipermail/star-developers/2013-April/000027.html
+# ~> #948866
+Patch8: star-1.5.2-man-page-day.patch
+
 License: CDDL
 Group: Applications/Archiving
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
@@ -44,6 +50,8 @@ and can restore individual files from the archive. Star supports ACL.
 %patch5 -p1 -b .references
 %patch6 -p1 -b .selinux-segfault
 %patch7 -p1 -b .crc
+%patch8 -p1 -b .man-page-day
+
 cp -a star/all.mk star/Makefile
 iconv -f iso_8859-1 -t utf-8 AN-1.5 >AN-1.5_utf8
 mv AN-1.5_utf8 AN-1.5
@@ -124,6 +132,7 @@ rm -rf ${RPM_BUILD_ROOT}
 * Wed Apr 10 2013 Pavel Raiskup <praiskup@redhat.com> - 1.5.2-1
 - rebase to most up2date upstream tarball, remove patches already upstream, fix
   code movements in patches (#928758)
+- fix man-page-day objections (private #948866)
 
 * Thu Mar 21 2013 Pavel Raiskup <praiskup@redhat.com> - 1.5.1-12
 - package also the 'scpio' utility (#771926)
