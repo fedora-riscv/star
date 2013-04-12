@@ -29,6 +29,12 @@ Patch7: star-1.5.1-crc.patch
 # ~> #948866
 Patch8: star-1.5.2-man-page-day.patch
 
+# fix the build for aarch64 bu actualizing the config.guess/config.sub files by
+# the most up2date version from git://git.savannah.gnu.org/config.git
+# ~> downstream
+# ~> #926571
+Patch9: star-1.5.2-aarch64-config.patch
+
 License: CDDL
 Group: Applications/Archiving
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
@@ -133,6 +139,7 @@ rm -rf ${RPM_BUILD_ROOT}
 - rebase to most up2date upstream tarball, remove patches already upstream, fix
   code movements in patches (#928758)
 - fix man-page-day objections (private #948866)
+- fix the build for aarch64 (#926571)
 
 * Thu Mar 21 2013 Pavel Raiskup <praiskup@redhat.com> - 1.5.1-12
 - package also the 'scpio' utility (#771926)
