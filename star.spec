@@ -3,29 +3,25 @@
 %endif
 Summary:  An archiving tool with ACL support
 Name: star
-Version: 1.5.1
-Release: 12%{?dist}
+Version: 1.5.2
+Release: 1%{?dist}
 URL: http://cdrecord.berlios.de/old/private/star.html
 Source: ftp://ftp.berlios.de/pub/star/%{name}-%{version}.tar.bz2
 
 #use gcc for compilation, change defaults for Linux
 Patch1: star-1.5-newMake.patch
 #add SELinux support to star(#)
-Patch2: star-1.5-selinux.patch
+Patch2: star-1.5.2-selinux.patch
 #do not segfault with data-change-warn option (#255261)
 Patch3: star-1.5-changewarnSegv.patch
-#do not conflict with glibc stdio functions (#494213)
-Patch4: star-1.5-stdioconflict.patch
 #Prevent buffer overflow for filenames with length of 100 characters (#556664)
-Patch5: star-1.5.1-bufferoverflow.patch
+Patch4: star-1.5.2-bufferoverflow.patch
 #Fix some invalid manpage references (#624612)
-Patch6: star-1.5.1-manpagereferences.patch
-#fix signedness segfault with multivol option(#666015)
-Patch7: star-1.5.1-multivolsigsegv.patch
+Patch5: star-1.5.1-manpagereferences.patch
 # do not crash when xattrs are not set on all files (#861848)
-Patch8: star-1.5.1-selinux-segfault.patch
+Patch6: star-1.5.1-selinux-segfault.patch
 # note that the H=crc format uses Sum32 algorithm, not CRC
-Patch9: star-1.5.1-crc.patch
+Patch7: star-1.5.1-crc.patch
 
 License: CDDL
 Group: Applications/Archiving
@@ -44,12 +40,10 @@ and can restore individual files from the archive. Star supports ACL.
 %patch2 -p1 -b .selinux
 %endif
 %patch3 -p1 -b .changewarnSegv
-%patch4 -p1 -b .stdio
-%patch5 -p1 -b .namesoverflow
-%patch6 -p1 -b .references
-%patch7 -p1 -b .multivol
-%patch8 -p1 -b .selinux-segfault
-%patch9 -p1 -b .crc
+%patch4 -p1 -b .namesoverflow
+%patch5 -p1 -b .references
+%patch6 -p1 -b .selinux-segfault
+%patch7 -p1 -b .crc
 cp -a star/all.mk star/Makefile
 iconv -f iso_8859-1 -t utf-8 AN-1.5 >AN-1.5_utf8
 mv AN-1.5_utf8 AN-1.5
@@ -88,8 +82,6 @@ rm -rf ${RPM_BUILD_ROOT}
 mkdir -p ${RPM_BUILD_ROOT}%{_mandir}/man4
 %makeinstall RPM_INSTALLDIR=${RPM_BUILD_ROOT} PARCH=%{_target_cpu} K_ARCH=%{_target_cpu} < /dev/null
 rm -rf ${RPM_BUILD_ROOT}/usr/share/doc/rmt
-mv ${RPM_BUILD_ROOT}/usr/man/man5/star.5 ${RPM_BUILD_ROOT}%{_mandir}/man4/star.4
-mv ${RPM_BUILD_ROOT}/usr/man/* ${RPM_BUILD_ROOT}%{_mandir}
 ln -s star.1.gz ${RPM_BUILD_ROOT}%{_mandir}/man1/ustar.1
 
 # XXX Nuke unpackaged files.
@@ -106,9 +98,9 @@ ln -s star.1.gz ${RPM_BUILD_ROOT}%{_mandir}/man1/ustar.1
   rm -rf .%{_prefix}%{_sysconfdir}
   rm -rf .%{_prefix}/include
   rm -rf .%{_prefix}/lib
-  rm -rf .%{_mandir}/man5
   rm -rf .%{_mandir}/man3
-  rm -rf .%{_mandir}/man1/{tartest,rmt,gnutar,smt,suntar,match}.1*
+  rm -rf .%{_mandir}/man5/{makefiles,makerules}.5*
+  rm -rf .%{_mandir}/man1/{tartest,rmt,gnutar,smt,mt,suntar,match}.1*
   rm -rf .%{_sbindir}
 )
 
@@ -126,9 +118,13 @@ rm -rf ${RPM_BUILD_ROOT}
 %{_mandir}/man1/spax.1*
 %{_mandir}/man1/ustar.1*
 %{_mandir}/man1/scpio.1*
-%{_mandir}/man4/star.4*
+%{_mandir}/man5/star.5*
 
 %changelog
+* Wed Apr 10 2013 Pavel Raiskup <praiskup@redhat.com> - 1.5.2-1
+- rebase to most up2date upstream tarball, remove patches already upstream, fix
+  code movements in patches (#928758)
+
 * Thu Mar 21 2013 Pavel Raiskup <praiskup@redhat.com> - 1.5.1-12
 - package also the 'scpio' utility (#771926)
 
