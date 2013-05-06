@@ -4,7 +4,7 @@
 Summary:  An archiving tool with ACL support
 Name: star
 Version: 1.5.2
-Release: 1%{?dist}
+Release: 2%{?dist}
 URL: http://cdrecord.berlios.de/old/private/star.html
 Source: ftp://ftp.berlios.de/pub/star/%{name}-%{version}.tar.bz2
 
@@ -29,8 +29,8 @@ Patch7: star-1.5.1-crc.patch
 # ~> #948866
 Patch8: star-1.5.2-man-page-day.patch
 
-# fix the build for aarch64 bu actualizing the config.guess/config.sub files by
-# the most up2date version from git://git.savannah.gnu.org/config.git
+# fix the build for aarch64 by actualization of the config.guess/config.sub
+# files with the most up2date version from git://git.savannah.gnu.org/config.git
 # ~> downstream
 # ~> #926571
 Patch9: star-1.5.2-aarch64-config.patch
@@ -44,6 +44,23 @@ BuildRequires: e2fsprogs-devel gawk
 %description
 Star saves many files together into a single tape or disk archive,
 and can restore individual files from the archive. Star supports ACL.
+
+%package -n     spax
+Summary:        Portable archive exchange
+Group:          Applications/Archiving
+
+%description -n spax
+The pax utility shall read and write archives, write lists of the members of
+archive files and copy directory hierarchies as is defined in IEEE Std 1003.1.
+
+%package -n     scpio
+Summary:        Copy file archives in and out (LEGACY)
+Group:          Applications/Archiving
+
+%description -n scpio
+The scpio utility, depending on the options used: copies files to an archive
+file, extracts files from an archive file, lists files from an archive file or
+copies files from one directory tree to another.
 
 %prep
 %setup -q
@@ -121,20 +138,31 @@ ln -s star.1.gz ${RPM_BUILD_ROOT}%{_mandir}/man1/ustar.1
 %clean
 rm -rf ${RPM_BUILD_ROOT}
 
+%global general_docs README AN* COPYING CDDL.Schily.txt TODO README.linux
+
 %files
 %defattr(-,root,root)
-%doc README AN* COPYING CDDL.Schily.txt README.SSPM STATUS.alpha TODO README.linux
+%doc %{general_docs}
 %{_bindir}/star
 %{_bindir}/ustar
-%{_bindir}/spax
-%{_bindir}/scpio
 %{_mandir}/man1/star.1*
-%{_mandir}/man1/spax.1*
 %{_mandir}/man1/ustar.1*
-%{_mandir}/man1/scpio.1*
 %{_mandir}/man5/star.5*
 
+%files -n scpio
+%doc %{general_docs}
+%doc %{_mandir}/man1/scpio.1*
+%{_bindir}/scpio
+
+%files -n spax
+%doc %{general_docs}
+%doc %{_mandir}/man1/spax.1*
+%{_bindir}/spax
+
 %changelog
+* Mon May 06 2013 Pavel Raiskup <praiskup@redhat.com> - 1.5.2-2
+- package spax and scpio separately (#959917)
+
 * Wed Apr 10 2013 Pavel Raiskup <praiskup@redhat.com> - 1.5.2-1
 - rebase to most up2date upstream tarball, remove patches already upstream, fix
   code movements in patches (#928758)
