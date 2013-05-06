@@ -1,5 +1,5 @@
 %if %{?WITH_SELINUX:0}%{!?WITH_SELINUX:1}
-%define WITH_SELINUX 1
+%global WITH_SELINUX 1
 %endif
 Summary:  An archiving tool with ACL support
 Name: star
@@ -37,9 +37,8 @@ Patch9: star-1.5.2-aarch64-config.patch
 
 License: CDDL
 Group: Applications/Archiving
-BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
 BuildRequires: libattr-devel libacl-devel libtool libselinux-devel
-BuildRequires: e2fsprogs-devel gawk
+BuildRequires: e2fsprogs-devel
 
 %description
 Star saves many files together into a single tape or disk archive,
@@ -74,12 +73,20 @@ copies files from one directory tree to another.
 %patch6 -p1 -b .selinux-segfault
 %patch7 -p1 -b .crc
 %patch8 -p1 -b .man-page-day
+%patch9 -p1 -b .aarch64
 
 cp -a star/all.mk star/Makefile
-iconv -f iso_8859-1 -t utf-8 AN-1.5 >AN-1.5_utf8
-mv AN-1.5_utf8 AN-1.5
-iconv -f iso_8859-1 -t utf-8 star/star.4 >star/star.4_utf8
-mv star/star.4_utf8 star/star.4
+
+star_recode()
+{
+    for i in $@; do
+        iconv -f iso_8859-1 -t utf-8 $i > .tmp_file
+        mv .tmp_file $i
+    done
+}
+
+star_recode AN-1.5 AN-1.5.2 star/star.4
+
 cp -a READMEs/README.linux .
 
 for PLAT in %{arm} x86_64 ppc64 s390 s390x sh3 sh4 sh4a sparcv9; do
@@ -94,7 +101,7 @@ export MAKEPROG=gmake
 # Autoconfiscate
 (cd autoconf; AC_MACRODIR=. AWK=gawk ./autoconf)
 
-#make %{?_smp_mflags} PARCH=%{_target_cpu} CPPOPTX="-DNO_FSYNC" \
+#make %%{?_smp_mflags} PARCH=%%{_target_cpu} CPPOPTX="-DNO_FSYNC" \
 # ~~> enable debug by COPTX='-g3 -O0' LDOPTX='-g3 -O0'
 make %{?_smp_mflags} PARCH=%{_target_cpu} \
 COPTX="$RPM_OPT_FLAGS -DTRY_EXT2_FS" CC="%{__cc}" \
@@ -109,7 +116,6 @@ CONFFLAGS="%{_target_platform} --prefix=%{_prefix} \
 
 %install
 export MAKEPROG=gmake
-rm -rf ${RPM_BUILD_ROOT}
 mkdir -p ${RPM_BUILD_ROOT}%{_mandir}/man4
 %makeinstall RPM_INSTALLDIR=${RPM_BUILD_ROOT} PARCH=%{_target_cpu} K_ARCH=%{_target_cpu} < /dev/null
 rm -rf ${RPM_BUILD_ROOT}/usr/share/doc/rmt
@@ -128,7 +134,7 @@ ln -s star.1.gz ${RPM_BUILD_ROOT}%{_mandir}/man1/ustar.1
   rm -f .%{_bindir}/suntar
   rm -rf .%{_prefix}%{_sysconfdir}
   rm -rf .%{_prefix}/include
-  rm -rf .%{_prefix}/lib
+  rm -rf .%{_prefix}/lib # hard-wired intently
   rm -rf .%{_mandir}/man3
   rm -rf .%{_mandir}/man5/{makefiles,makerules}.5*
   rm -rf .%{_mandir}/man1/{tartest,rmt,gnutar,smt,mt,suntar,match}.1*
@@ -136,12 +142,10 @@ ln -s star.1.gz ${RPM_BUILD_ROOT}%{_mandir}/man1/ustar.1
 )
 
 %clean
-rm -rf ${RPM_BUILD_ROOT}
 
 %global general_docs README AN* COPYING CDDL.Schily.txt TODO README.linux
 
 %files
-%defattr(-,root,root)
 %doc %{general_docs}
 %{_bindir}/star
 %{_bindir}/ustar
@@ -162,6 +166,7 @@ rm -rf ${RPM_BUILD_ROOT}
 %changelog
 * Mon May 06 2013 Pavel Raiskup <praiskup@redhat.com> - 1.5.2-2
 - package spax and scpio separately (#959917)
+- fedora-review fixes, unapplied patch
 
 * Wed Apr 10 2013 Pavel Raiskup <praiskup@redhat.com> - 1.5.2-1
 - rebase to most up2date upstream tarball, remove patches already upstream, fix
