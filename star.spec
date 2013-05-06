@@ -1,6 +1,9 @@
 %if %{?WITH_SELINUX:0}%{!?WITH_SELINUX:1}
 %global WITH_SELINUX 1
 %endif
+
+%global ALTERNATIVES %{_sbindir}/alternatives
+
 Summary:  An archiving tool with ACL support
 Name: star
 Version: 1.5.2
@@ -35,6 +38,9 @@ Patch8: star-1.5.2-man-page-day.patch
 # ~> #926571
 Patch9: star-1.5.2-aarch64-config.patch
 
+Requires(post):  %{ALTERNATIVES}
+Requires(preun): %{ALTERNATIVES}
+
 License: CDDL
 Group: Applications/Archiving
 BuildRequires: libattr-devel libacl-devel libtool libselinux-devel
@@ -60,6 +66,16 @@ Group:          Applications/Archiving
 The scpio utility, depending on the options used: copies files to an archive
 file, extracts files from an archive file, lists files from an archive file or
 copies files from one directory tree to another.
+
+# "desired" alternative constants
+%global ALT_NAME                pax
+%global ALT_LINK                %{_bindir}/pax
+%global ALT_SL1_NAME            pax-man
+%global ALT_SL1_LINK            %{_mandir}/man1/pax.1.gz
+
+# "local" alternative constants ("opax" - OpenBSD pax)
+%global ALT_PATH                %{_bindir}/spax
+%global ALT_SL1_PATH            %{_mandir}/man1/spax.1.gz
 
 %prep
 %setup -q
@@ -145,6 +161,17 @@ ln -s star.1.gz ${RPM_BUILD_ROOT}%{_mandir}/man1/ustar.1
 
 %global general_docs README AN* COPYING CDDL.Schily.txt TODO README.linux
 
+%post -n spax
+%{ALTERNATIVES} \
+    --install   %{ALT_LINK}     %{ALT_NAME}     %{ALT_PATH}     66 \
+    --slave     %{ALT_SL1_LINK} %{ALT_SL1_NAME} %{ALT_SL1_PATH}
+
+%preun -n spax
+if [ $1 -eq 0 ]; then
+    # only on pure uninstall (not upgrade)
+    %{ALTERNATIVES} --remove %{ALT_NAME} %{ALT_PATH}
+fi
+
 %files
 %doc %{general_docs}
 %{_bindir}/star
@@ -167,6 +194,7 @@ ln -s star.1.gz ${RPM_BUILD_ROOT}%{_mandir}/man1/ustar.1
 * Mon May 06 2013 Pavel Raiskup <praiskup@redhat.com> - 1.5.2-2
 - package spax and scpio separately (#959917)
 - fedora-review fixes, unapplied patch
+- make the spax to be pax alternative (#960007)
 
 * Wed Apr 10 2013 Pavel Raiskup <praiskup@redhat.com> - 1.5.2-1
 - rebase to most up2date upstream tarball, remove patches already upstream, fix
