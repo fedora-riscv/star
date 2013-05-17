@@ -7,7 +7,7 @@
 Summary:  An archiving tool with ACL support
 Name: star
 Version: 1.5.2
-Release: 2%{?dist}
+Release: 3%{?dist}
 URL: http://cdrecord.berlios.de/old/private/star.html
 Source: ftp://ftp.berlios.de/pub/star/%{name}-%{version}.tar.bz2
 
@@ -189,8 +189,13 @@ fi
 %doc %{general_docs}
 %doc %{_mandir}/man1/spax.1*
 %{_bindir}/spax
+%ghost %verify(not md5 size mode mtime) %{ALT_LINK}
+%ghost %verify(not md5 size mode mtime) %{ALT_SL1_LINK}
 
 %changelog
+* Fri May 17 2013 Pavel Raiskup <praiskup@redhat.com> - 1.5.2-3
+- add missing ghost files (#960007)
+
 * Mon May 06 2013 Pavel Raiskup <praiskup@redhat.com> - 1.5.2-2
 - package spax and scpio separately (#959917)
 - fedora-review fixes, unapplied patch
