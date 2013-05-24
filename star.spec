@@ -7,7 +7,7 @@
 Summary:  An archiving tool with ACL support
 Name: star
 Version: 1.5.2
-Release: 3%{?dist}
+Release: 4%{?dist}
 URL: http://cdrecord.berlios.de/old/private/star.html
 Source: ftp://ftp.berlios.de/pub/star/%{name}-%{version}.tar.bz2
 
@@ -73,7 +73,7 @@ copies files from one directory tree to another.
 %global ALT_SL1_NAME            pax-man
 %global ALT_SL1_LINK            %{_mandir}/man1/pax.1.gz
 
-# "local" alternative constants ("opax" - OpenBSD pax)
+# "local" alternative constants
 %global ALT_PATH                %{_bindir}/spax
 %global ALT_SL1_PATH            %{_mandir}/man1/spax.1.gz
 
@@ -193,7 +193,7 @@ fi
 %ghost %verify(not md5 size mode mtime) %{ALT_SL1_LINK}
 
 %changelog
-* Fri May 17 2013 Pavel Raiskup <praiskup@redhat.com> - 1.5.2-3
+* Fri May 24 2013 Pavel Raiskup <praiskup@redhat.com> - 1.5.2-4
 - add missing ghost files (#960007)
 
 * Mon May 06 2013 Pavel Raiskup <praiskup@redhat.com> - 1.5.2-2
