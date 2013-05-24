@@ -7,7 +7,7 @@
 Summary:  An archiving tool with ACL support
 Name: star
 Version: 1.5.2
-Release: 4%{?dist}
+Release: 5%{?dist}
 URL: http://cdrecord.berlios.de/old/private/star.html
 Source: ftp://ftp.berlios.de/pub/star/%{name}-%{version}.tar.bz2
 
@@ -46,11 +46,21 @@ Group: Applications/Archiving
 BuildRequires: libattr-devel libacl-devel libtool libselinux-devel
 BuildRequires: e2fsprogs-devel
 
+# Historically, star installed /usr/bin/spax binary also so we don't want to
+# break the compatibility.  We don't care about scpio because scpio binary was
+# not installed.
+Requires: spax
+
 %description
 Star saves many files together into a single tape or disk archive,
 and can restore individual files from the archive. Star supports ACL.
 
 %package -n     spax
+# Temporary!  Remove once no problem may occur.  We really need to force update
+# of older star and pax, when any of them is installed.  Its file list
+# collisions with 'spax'.
+Conflicts:      star < 1.5.2-5
+Conflicts:      pax < 3.4-16
 Summary:        Portable archive exchange
 Group:          Applications/Archiving
 
@@ -59,6 +69,9 @@ The pax utility shall read and write archives, write lists of the members of
 archive files and copy directory hierarchies as is defined in IEEE Std 1003.1.
 
 %package -n     scpio
+# Temporary!  Remove once _no problem_ may occur.  We really need to force
+# update of older star if it installed — its files overlaps with scpio.
+Conflicts:      star < 1.5.2-5
 Summary:        Copy file archives in and out (LEGACY)
 Group:          Applications/Archiving
 
@@ -193,8 +206,9 @@ fi
 %ghost %verify(not md5 size mode mtime) %{ALT_SL1_LINK}
 
 %changelog
-* Fri May 24 2013 Pavel Raiskup <praiskup@redhat.com> - 1.5.2-4
+* Fri May 24 2013 Pavel Raiskup <praiskup@redhat.com> - 1.5.2-5
 - add missing ghost files (#960007)
+- fix the upgrade path, sorry for the noise (#959917, #960007)
 
 * Mon May 06 2013 Pavel Raiskup <praiskup@redhat.com> - 1.5.2-2
 - package spax and scpio separately (#959917)
