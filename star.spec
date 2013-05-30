@@ -7,7 +7,7 @@
 Summary:  An archiving tool with ACL support
 Name: star
 Version: 1.5.2
-Release: 5%{?dist}
+Release: 6%{?dist}
 URL: http://cdrecord.berlios.de/old/private/star.html
 Source: ftp://ftp.berlios.de/pub/star/%{name}-%{version}.tar.bz2
 
@@ -37,6 +37,11 @@ Patch8: star-1.5.2-man-page-day.patch
 # ~> downstream
 # ~> #926571
 Patch9: star-1.5.2-aarch64-config.patch
+
+# Allow rmt to access all files.
+# ~> downstream
+# ~> #968980
+Patch10: star-1.5.2-rmt-rh-access.patch
 
 Requires(post):  %{ALTERNATIVES}
 Requires(preun): %{ALTERNATIVES}
@@ -80,6 +85,17 @@ The scpio utility, depending on the options used: copies files to an archive
 file, extracts files from an archive file, lists files from an archive file or
 copies files from one directory tree to another.
 
+%package -n     rmt
+Summary: Provides certain programs with access to remote tape devices
+Group: Applications/Archiving
+# we need to be greater than the version from 'dump' package
+Epoch: 2
+
+%description -n rmt
+The rmt utility provides remote access to tape devices for programs
+like dump (a filesystem backup program), restore (a program for
+restoring files from a backup), and tar (an archiving program).
+
 # "desired" alternative constants
 %global ALT_NAME                pax
 %global ALT_LINK                %{_bindir}/pax
@@ -103,6 +119,7 @@ copies files from one directory tree to another.
 %patch7 -p1 -b .crc
 %patch8 -p1 -b .man-page-day
 %patch9 -p1 -b .aarch64
+%patch10 -p1 -b .rmt-access-rules
 
 cp -a star/all.mk star/Makefile
 
@@ -146,13 +163,13 @@ CONFFLAGS="%{_target_platform} --prefix=%{_prefix} \
 %install
 export MAKEPROG=gmake
 mkdir -p ${RPM_BUILD_ROOT}%{_mandir}/man4
-%makeinstall RPM_INSTALLDIR=${RPM_BUILD_ROOT} PARCH=%{_target_cpu} K_ARCH=%{_target_cpu} < /dev/null
-rm -rf ${RPM_BUILD_ROOT}/usr/share/doc/rmt
+
+make install RPM_INSTALLDIR=${RPM_BUILD_ROOT} PARCH=%{_target_cpu} K_ARCH=%{_target_cpu} < /dev/null
+
 ln -s star.1.gz ${RPM_BUILD_ROOT}%{_mandir}/man1/ustar.1
 
 # XXX Nuke unpackaged files.
 ( cd ${RPM_BUILD_ROOT}
-  rm -f .%{_sysconfdir}/default/rmt
   rm -f .%{_bindir}/mt
   rm -f .%{_bindir}/smt
   rm -f .%{_bindir}/tartest
@@ -161,13 +178,13 @@ ln -s star.1.gz ${RPM_BUILD_ROOT}%{_mandir}/man1/ustar.1
   rm -f .%{_bindir}/star_fat
   rm -f .%{_bindir}/star_sym
   rm -f .%{_bindir}/suntar
+  rm -rf .%{_docdir}/rmt
   rm -rf .%{_prefix}%{_sysconfdir}
   rm -rf .%{_prefix}/include
   rm -rf .%{_prefix}/lib # hard-wired intently
   rm -rf .%{_mandir}/man3
   rm -rf .%{_mandir}/man5/{makefiles,makerules}.5*
-  rm -rf .%{_mandir}/man1/{tartest,rmt,gnutar,smt,mt,suntar,match}.1*
-  rm -rf .%{_sbindir}
+  rm -rf .%{_mandir}/man1/{tartest,gnutar,smt,mt,suntar,match}.1*
 )
 
 %clean
@@ -205,7 +222,16 @@ fi
 %ghost %verify(not md5 size mode mtime) %{ALT_LINK}
 %ghost %verify(not md5 size mode mtime) %{ALT_SL1_LINK}
 
+%files -n rmt
+%doc %{general_docs}
+%{_sbindir}/rmt
+%{_mandir}/man1/rmt.1*
+%config %{_sysconfdir}/default/rmt
+
 %changelog
+* Thu May 30 2013 Pavel Raiskup <praiskup@redhat.com> - 1.5.2-6
+- subpackage also 'rmt' (#968980)
+
 * Fri May 24 2013 Pavel Raiskup <praiskup@redhat.com> - 1.5.2-5
 - add missing ghost files (#960007)
 - fix the upgrade path, sorry for the noise (#959917, #960007)
