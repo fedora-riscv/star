@@ -7,7 +7,7 @@
 Summary:  An archiving tool with ACL support
 Name: star
 Version: 1.5.2
-Release: 5%{?dist}
+Release: 6%{?dist}
 URL: http://cdrecord.berlios.de/old/private/star.html
 Source: ftp://ftp.berlios.de/pub/star/%{name}-%{version}.tar.bz2
 
@@ -37,6 +37,11 @@ Patch8: star-1.5.2-man-page-day.patch
 # ~> downstream
 # ~> #926571
 Patch9: star-1.5.2-aarch64-config.patch
+
+# Use ssh rather than rsh by default
+# ~> downstream
+# ~> related to #968980
+Patch10: star-1.5.2-use-ssh-by-default.patch
 
 Requires(post):  %{ALTERNATIVES}
 Requires(preun): %{ALTERNATIVES}
@@ -103,6 +108,7 @@ copies files from one directory tree to another.
 %patch7 -p1 -b .crc
 %patch8 -p1 -b .man-page-day
 %patch9 -p1 -b .aarch64
+%patch10 -p1 -b .ssh-by-default
 
 cp -a star/all.mk star/Makefile
 
@@ -206,6 +212,9 @@ fi
 %ghost %verify(not md5 size mode mtime) %{ALT_SL1_LINK}
 
 %changelog
+* Thu Jun 20 2013 Pavel Raiskup <praiskup@redhat.com> - 1.5.2-6
+- use the ssh as the default remote access method
+
 * Fri May 24 2013 Pavel Raiskup <praiskup@redhat.com> - 1.5.2-5
 - add missing ghost files (#960007)
 - fix the upgrade path, sorry for the noise (#959917, #960007)
