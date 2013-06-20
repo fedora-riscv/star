@@ -7,7 +7,7 @@
 Summary:  An archiving tool with ACL support
 Name: star
 Version: 1.5.2
-Release: 6%{?dist}
+Release: 7%{?dist}
 URL: http://cdrecord.berlios.de/old/private/star.html
 Source: ftp://ftp.berlios.de/pub/star/%{name}-%{version}.tar.bz2
 
@@ -167,6 +167,7 @@ mkdir -p ${RPM_BUILD_ROOT}%{_mandir}/man4
 make install RPM_INSTALLDIR=${RPM_BUILD_ROOT} PARCH=%{_target_cpu} K_ARCH=%{_target_cpu} < /dev/null
 
 ln -s star.1.gz ${RPM_BUILD_ROOT}%{_mandir}/man1/ustar.1
+ln -s %{_sbindir}/rmt ${RPM_BUILD_ROOT}%{_sysconfdir}/rmt
 
 # XXX Nuke unpackaged files.
 ( cd ${RPM_BUILD_ROOT}
@@ -227,8 +228,17 @@ fi
 %{_sbindir}/rmt
 %{_mandir}/man1/rmt.1*
 %config %{_sysconfdir}/default/rmt
+# This symlink is used by cpio, star, spax, scpio, .. thus it is needed.  Even
+# if the cpio may be configured to use /sbin/rmt rather than /etc/rmt, star (and
+# thus spax, ..) has the lookup path hardcoded to '/etc/rmt' (it means that even
+# non rpm based systems will try to look for /etc/rmt).  And - the conclusion is
+# - it does not make sense to fight against /etc/rmt symlink ATM (year 2013).
+%{_sysconfdir}/rmt
 
 %changelog
+* Thu Jun 20 2013 Pavel Raiskup <praiskup@redhat.com> - 1.5.2-7
+- we should provide /etc/rmt symlink for a while (related to #968980)
+
 * Thu May 30 2013 Pavel Raiskup <praiskup@redhat.com> - 1.5.2-6
 - subpackage also 'rmt' (#968980)
 
