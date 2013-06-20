@@ -43,6 +43,11 @@ Patch9: star-1.5.2-aarch64-config.patch
 # ~> #968980
 Patch10: star-1.5.2-rmt-rh-access.patch
 
+# Use ssh rather than rsh by default
+# ~> downstream
+# ~> related to #968980
+Patch11: star-1.5.2-use-ssh-by-default.patch
+
 Requires(post):  %{ALTERNATIVES}
 Requires(preun): %{ALTERNATIVES}
 
@@ -120,6 +125,7 @@ restoring files from a backup), and tar (an archiving program).
 %patch8 -p1 -b .man-page-day
 %patch9 -p1 -b .aarch64
 %patch10 -p1 -b .rmt-access-rules
+%patch11 -p1 -b .ssh-by-default
 
 cp -a star/all.mk star/Makefile
 
@@ -238,6 +244,7 @@ fi
 %changelog
 * Thu Jun 20 2013 Pavel Raiskup <praiskup@redhat.com> - 1.5.2-7
 - we should provide /etc/rmt symlink for a while (related to #968980)
+- use the ssh as the default remote access method
 
 * Thu May 30 2013 Pavel Raiskup <praiskup@redhat.com> - 1.5.2-6
 - subpackage also 'rmt' (#968980)
