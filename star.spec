@@ -7,7 +7,7 @@
 Summary:  An archiving tool with ACL support
 Name: star
 Version: 1.5.2
-Release: 7%{?dist}
+Release: 8%{?dist}
 URL: http://cdrecord.berlios.de/old/private/star.html
 Source: ftp://ftp.berlios.de/pub/star/%{name}-%{version}.tar.bz2
 
@@ -242,6 +242,9 @@ fi
 %{_sysconfdir}/rmt
 
 %changelog
+* Sun Aug 04 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.5.2-8
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_20_Mass_Rebuild
+
 * Thu Jun 20 2013 Pavel Raiskup <praiskup@redhat.com> - 1.5.2-7
 - we should provide /etc/rmt symlink for a while (related to #968980)
 - use the ssh as the default remote access method
