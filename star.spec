@@ -7,7 +7,9 @@
 Summary:  An archiving tool with ACL support
 Name: star
 Version: 1.5.2
-Release: 8%{?dist}
+Release: 9%{?dist}
+License: CDDL
+Group: Applications/Archiving
 URL: http://cdrecord.berlios.de/old/private/star.html
 Source: ftp://ftp.berlios.de/pub/star/%{name}-%{version}.tar.bz2
 
@@ -32,11 +34,8 @@ Patch7: star-1.5.1-crc.patch
 # ~> #948866
 Patch8: star-1.5.2-man-page-day.patch
 
-# fix the build for aarch64 by actualization of the config.guess/config.sub
-# files with the most up2date version from git://git.savannah.gnu.org/config.git
-# ~> downstream
-# ~> #926571
-Patch9: star-1.5.2-aarch64-config.patch
+# Disable profiling on aarch64 as it's not currently supported upstream
+Patch9: star-aarch64.patch
 
 # Allow rmt to access all files.
 # ~> downstream
@@ -48,13 +47,11 @@ Patch10: star-1.5.2-rmt-rh-access.patch
 # ~> related to #968980
 Patch11: star-1.5.2-use-ssh-by-default.patch
 
-Requires(post):  %{ALTERNATIVES}
-Requires(preun): %{ALTERNATIVES}
-
-License: CDDL
-Group: Applications/Archiving
 BuildRequires: libattr-devel libacl-devel libtool libselinux-devel
 BuildRequires: e2fsprogs-devel
+
+Requires(post):  %{ALTERNATIVES}
+Requires(preun): %{ALTERNATIVES}
 
 # Historically, star installed /usr/bin/spax binary also so we don't want to
 # break the compatibility.  We don't care about scpio because scpio binary was
@@ -141,7 +138,7 @@ star_recode AN-1.5 AN-1.5.2 star/star.4
 
 cp -a READMEs/README.linux .
 
-for PLAT in %{arm} x86_64 ppc64 s390 s390x sh3 sh4 sh4a sparcv9; do
+for PLAT in %{arm} aarch64 x86_64 ppc64 s390 s390x sh3 sh4 sh4a sparcv9; do
     for AFILE in gcc cc; do
             [ ! -e RULES/${PLAT}-linux-${AFILE}.rul ] \
             && ln -s i586-linux-${AFILE}.rul RULES/${PLAT}-linux-${AFILE}.rul
@@ -242,6 +239,9 @@ fi
 %{_sysconfdir}/rmt
 
 %changelog
+* Mon Jan 13 2014 Peter Robinson <pbrobinson@fedoraproject.org> 1.5.2-9
+- Temporarily disable profiling on aarch64
+
 * Sun Aug 04 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.5.2-8
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_20_Mass_Rebuild
 
