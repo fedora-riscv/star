@@ -7,7 +7,7 @@
 Summary:  An archiving tool with ACL support
 Name: star
 Version: 1.5.2
-Release: 9%{?dist}
+Release: 10%{?dist}
 License: CDDL
 Group: Applications/Archiving
 URL: http://cdrecord.berlios.de/old/private/star.html
@@ -138,7 +138,7 @@ star_recode AN-1.5 AN-1.5.2 star/star.4
 
 cp -a READMEs/README.linux .
 
-for PLAT in %{arm} aarch64 x86_64 ppc64 s390 s390x sh3 sh4 sh4a sparcv9; do
+for PLAT in %{arm} %{power64} aarch64 x86_64 s390 s390x sh3 sh4 sh4a sparcv9; do
     for AFILE in gcc cc; do
             [ ! -e RULES/${PLAT}-linux-${AFILE}.rul ] \
             && ln -s i586-linux-${AFILE}.rul RULES/${PLAT}-linux-${AFILE}.rul
@@ -239,6 +239,9 @@ fi
 %{_sysconfdir}/rmt
 
 %changelog
+* Fri Jan 17 2014 Pavel Raiskup <praiskup@redhat.com> - 1.5.2-10
+- enable build for ppc64le (#1054401)
+
 * Mon Jan 13 2014 Peter Robinson <pbrobinson@fedoraproject.org> 1.5.2-9
 - Temporarily disable profiling on aarch64
 
