@@ -7,7 +7,7 @@
 Summary:  An archiving tool with ACL support
 Name: star
 Version: 1.5.2
-Release: 10%{?dist}
+Release: 11%{?dist}
 License: CDDL
 Group: Applications/Archiving
 URL: http://cdrecord.berlios.de/old/private/star.html
@@ -239,6 +239,9 @@ fi
 %{_sysconfdir}/rmt
 
 %changelog
+* Sun Jun 08 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.5.2-11
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
+
 * Fri Jan 17 2014 Pavel Raiskup <praiskup@redhat.com> - 1.5.2-10
 - enable build for ppc64le (#1054401)
 
