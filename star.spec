@@ -131,30 +131,25 @@ for PLAT in %{arm} %{power64} aarch64 x86_64 s390 s390x sh3 sh4 sh4a sparcv9; do
 done
 
 %build
-# Silence irritating warning
-export GMAKE_NOWARN=true
+# This is config/work-around for atypical build system.  Variables used are
+# docummented makefiles.5.  GMAKE_NOWARN silences irritating warnings in
+# GNU/Linux ecosystem.
+%global make_flags GMAKE_NOWARN=true                                    \\\
+    RUNPATH=                                                            \\\
+    LDPATH=                                                             \\\
+    PARCH=%{_target_cpu}                                                \\\
+    K_ARCH=%{_target_cpu}                                               \\\
+    INS_BASE=$RPM_BUILD_ROOT%{_prefix}                                  \\\
+    INS_RBASE=$RPM_BUILD_ROOT                                           \\\
+    INSTALL='sh $(SRCROOT)/conf/install-sh -c -m $(INSMODEINS)'         \\\
+    COPTX="$RPM_OPT_FLAGS -DTRY_EXT2_FS"                                \\\
+    DEFCCOM=gcc
 
 # Note: disable optimalisation by COPTX='-g3 -O0' LDOPTX='-g3 -O0'
-make %{?_smp_mflags} \
-    RUNPATH= \
-    PARCH=%{_target_cpu} \
-    K_ARCH=%{_target_cpu} \
-    DEFCCOM=gcc \
-    COPTX="$RPM_OPT_FLAGS -DTRY_EXT2_FS" CC="%{__cc}"
-
+make %{?_smp_mflags} %make_flags
 
 %install
-# This is work-around atypical build system.  Variables used:
-#   INS_BASE - something like DESTDIR together with --prefix in with autotools
-#   INS_BASE - something like DESTDIR for configuration files, but etc/default
-#       is at least in 1.5.3 hardcoded
-#   INSTALL - install script, used non-default because the -o & -g options are
-#       causing ugly build output
-# Things like --docdir, etc. are randomly hard-coded so we must deal with it.
-make install -s \
-    INS_BASE=$RPM_BUILD_ROOT%{_prefix} \
-    INS_RBASE=$RPM_BUILD_ROOT \
-    INSTALL='sh $(SRCROOT)/conf/install-sh -c -m $(INSMODEINS)'
+make install -s %make_flags
 
 ln -s star.1.gz ${RPM_BUILD_ROOT}%{_mandir}/man1/ustar.1
 mkdir -p ${RPM_BUILD_ROOT}%{_sysconfdir}
