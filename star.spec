@@ -139,6 +139,7 @@ make %{?_smp_mflags} \
     RUNPATH= \
     PARCH=%{_target_cpu} \
     K_ARCH=%{_target_cpu} \
+    DEFCCOM=gcc \
     COPTX="$RPM_OPT_FLAGS -DTRY_EXT2_FS" CC="%{__cc}"
 
 
