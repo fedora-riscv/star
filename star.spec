@@ -7,7 +7,7 @@
 Summary:  An archiving tool with ACL support
 Name: star
 Version: 1.5.3
-Release: 2%{?dist}
+Release: 3%{?dist}
 License: CDDL
 Group: Applications/Archiving
 URL: http://freecode.com/projects/star
@@ -30,9 +30,6 @@ Patch5: star-1.5.1-selinux-segfault.patch
 
 # note that the H=crc format uses Sum32 algorithm, not CRC
 Patch6: star-1.5.1-crc.patch
-
-# Disable profiling on aarch64 as it's not currently supported upstream
-Patch7: star-aarch64.patch
 
 # Allow rmt to access all files.
 # ~> downstream
@@ -105,7 +102,6 @@ restoring files from a backup), and tar (an archiving program).
 %patch4 -p1 -b .references
 %patch5 -p1 -b .selinux-segfault
 %patch6 -p1 -b .crc
-%patch7 -p1 -b .aarch64
 %patch8 -p1 -b .rmt-access-rules
 %patch9 -p1 -b .ssh-by-default
 %patch10 -p1 -b .bug-config-1.5.3
@@ -231,6 +227,9 @@ fi
 %{_sysconfdir}/rmt
 
 %changelog
+* Tue Sep 16 2014 Peter Robinson <pbrobinson@fedoraproject.org> 1.5.3-3
+- Re-enable profiling on aarch64
+
 * Mon Aug 18 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.5.3-2
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_21_22_Mass_Rebuild
 
