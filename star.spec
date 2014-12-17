@@ -7,7 +7,7 @@
 Summary:  An archiving tool with ACL support
 Name: star
 Version: 1.5.3
-Release: 3%{?dist}
+Release: 4%{?dist}
 License: CDDL
 Group: Applications/Archiving
 URL: http://freecode.com/projects/star
@@ -43,6 +43,10 @@ Patch9: star-1.5.2-use-ssh-by-default.patch
 
 # Fix broken star.mk in 1.5.3 (included from all.mk)
 Patch10: star-1.5.3-star-mk.patch
+
+# Fix segfault for 'pax -X' (rhbz#1175009)
+# ~> downstream
+Patch11: star-1.5.3-pax-X-option.patch
 
 BuildRequires: libattr-devel libacl-devel libtool libselinux-devel
 BuildRequires: e2fsprogs-devel
@@ -105,6 +109,7 @@ restoring files from a backup), and tar (an archiving program).
 %patch8 -p1 -b .rmt-access-rules
 %patch9 -p1 -b .ssh-by-default
 %patch10 -p1 -b .bug-config-1.5.3
+%patch11 -p1 -b .pax-X
 
 # disable single "fat" binary
 cp -a star/all.mk star/Makefile
@@ -227,6 +232,9 @@ fi
 %{_sysconfdir}/rmt
 
 %changelog
+* Wed Dec 17 2014 Pavel Raiskup <praiskup@redhat.com> - 1.5.3-4
+- fix segfault for pax -X (#1175009)
+
 * Tue Sep 16 2014 Peter Robinson <pbrobinson@fedoraproject.org> 1.5.3-3
 - Re-enable profiling on aarch64
 
