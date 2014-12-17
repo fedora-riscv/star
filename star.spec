@@ -7,7 +7,7 @@
 Summary:  An archiving tool with ACL support
 Name: star
 Version: 1.5.2
-Release: 8%{?dist}
+Release: 9%{?dist}
 URL: http://cdrecord.berlios.de/old/private/star.html
 Source: ftp://ftp.berlios.de/pub/star/%{name}-%{version}.tar.bz2
 
@@ -47,6 +47,10 @@ Patch10: star-1.5.2-rmt-rh-access.patch
 # ~> downstream
 # ~> related to #968980
 Patch11: star-1.5.2-use-ssh-by-default.patch
+
+# Fix segfault for 'pax -X' (rhbz#1175009)
+# ~> downstream
+Patch12: star-1.5.3-pax-X-option.patch
 
 Requires(post):  %{ALTERNATIVES}
 Requires(preun): %{ALTERNATIVES}
@@ -126,6 +130,7 @@ restoring files from a backup), and tar (an archiving program).
 %patch9 -p1 -b .aarch64
 %patch10 -p1 -b .rmt-access-rules
 %patch11 -p1 -b .ssh-by-default
+%patch12 -p1 -b .pax-X
 
 cp -a star/all.mk star/Makefile
 
@@ -242,6 +247,9 @@ fi
 %{_sysconfdir}/rmt
 
 %changelog
+* Wed Dec 17 2014 Pavel Raiskup <praiskup@redhat.com> - 1.5.2-9
+- fix segfault for pax -X (#1175009)
+
 * Sun Aug 04 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.5.2-8
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_20_Mass_Rebuild
 
