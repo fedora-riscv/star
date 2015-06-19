@@ -7,7 +7,7 @@
 Summary:  An archiving tool with ACL support
 Name: star
 Version: 1.5.3
-Release: 4%{?dist}
+Release: 5%{?dist}
 License: CDDL
 Group: Applications/Archiving
 URL: http://freecode.com/projects/star
@@ -232,6 +232,9 @@ fi
 %{_sysconfdir}/rmt
 
 %changelog
+* Fri Jun 19 2015 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.5.3-5
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_23_Mass_Rebuild
+
 * Wed Dec 17 2014 Pavel Raiskup <praiskup@redhat.com> - 1.5.3-4
 - fix segfault for pax -X (#1175009)
 
