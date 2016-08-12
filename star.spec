@@ -7,7 +7,7 @@
 Summary:  An archiving tool with ACL support
 Name: star
 Version: 1.5.3
-Release: 6%{?dist}
+Release: 7%{?dist}
 License: CDDL
 Group: Applications/Archiving
 URL: http://freecode.com/projects/star
@@ -124,7 +124,7 @@ star_recode()
 
 star_recode AN-1.5 AN-1.5.2 star/star.4
 
-for PLAT in %{arm} %{power64} aarch64 x86_64 s390 s390x sh3 sh4 sh4a sparcv9; do
+for PLAT in %{arm} %{power64} aarch64 %{mips} x86_64 s390 s390x sh3 sh4 sh4a sparcv9; do
     for AFILE in gcc cc; do
             [ ! -e RULES/${PLAT}-linux-${AFILE}.rul ] \
             && ln -s i586-linux-${AFILE}.rul RULES/${PLAT}-linux-${AFILE}.rul
@@ -232,6 +232,9 @@ fi
 %{_sysconfdir}/rmt
 
 %changelog
+* Fri Aug 12 2016 Michal Toman <mtoman@fedoraproject.org> - 1.5.3-7
+- Build properly on MIPS
+
 * Fri Feb 05 2016 Fedora Release Engineering <releng@fedoraproject.org> - 1.5.3-6
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_24_Mass_Rebuild
 
