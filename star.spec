@@ -7,7 +7,7 @@
 Summary:  An archiving tool with ACL support
 Name: star
 Version: 1.5.3
-Release: 11%{?dist}
+Release: 12%{?dist}
 License: CDDL
 Group: Applications/Archiving
 URL: http://freecode.com/projects/star
@@ -144,6 +144,7 @@ done
     INS_RBASE=$RPM_BUILD_ROOT                                           \\\
     INSTALL='sh $(SRCROOT)/conf/install-sh -c -m $(INSMODEINS)'         \\\
     COPTX="$RPM_OPT_FLAGS -DTRY_EXT2_FS"                                \\\
+    LDOPTX="$RPM_LD_FLAGS"                                              \\\
     DEFCCOM=gcc
 
 # Note: disable optimalisation by COPTX='-g3 -O0' LDOPTX='-g3 -O0'
@@ -232,6 +233,9 @@ fi
 %{_sysconfdir}/rmt
 
 %changelog
+* Mon Apr 09 2018 Rafael Santos <rdossant@redhat.com> - 1.5.3-12
+- Use standard Fedora linker flags (bug #1548670)
+
 * Fri Feb 09 2018 Fedora Release Engineering <releng@fedoraproject.org> - 1.5.3-11
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_28_Mass_Rebuild
 
