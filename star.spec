@@ -3,7 +3,7 @@
 Summary:  An archiving tool with ACL support
 Name: star
 Version: 1.6
-Release: 8%{?dist}
+Release: 8.rv64%{?dist}
 License: CDDL
 URL: http://freecode.com/projects/star
 Source: https://downloads.sourceforge.net/s-tar/%{name}-%{version}.tar.bz2
@@ -90,7 +90,7 @@ star_recode()
 
 star_recode AN-1.5 AN-1.5.2 star/star.4
 
-for PLAT in %{arm} %{power64} aarch64 %{mips} x86_64 s390 s390x sh3 sh4 sh4a sparcv9; do
+for PLAT in %{arm} %{power64} aarch64 %{mips} x86_64 s390 s390x sh3 sh4 sh4a sparcv9 riscv64; do
     for AFILE in gcc cc; do
             [ ! -e RULES/${PLAT}-linux-${AFILE}.rul ] \
             && ln -s i586-linux-${AFILE}.rul RULES/${PLAT}-linux-${AFILE}.rul
@@ -198,6 +198,9 @@ fi
 %{_sysconfdir}/rmt
 
 %changelog
+* Wed May 03 2023 Liu Yang <Yang.Liu.sn@gmail.com> - 1.6-8.rv64
+- cherry-pick davidlt's riscv64 support patch, and drop the imake dependency part.
+
 * Sat Jan 21 2023 Fedora Release Engineering <releng@fedoraproject.org> - 1.6-8
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_38_Mass_Rebuild
 
@@ -240,6 +243,10 @@ fi
 
 * Sat Jul 14 2018 Fedora Release Engineering <releng@fedoraproject.org> - 1.5.3-13
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_29_Mass_Rebuild
+
+* Mon Apr 30 2018 David Abdurachmanov <david.abdurachmanov@gmail.com> - 1.5.3-12.0.riscv64
+- Add BuildRequires: imake (for makedepend)
+- Enable riscv64
 
 * Mon Apr 09 2018 Rafael Santos <rdossant@redhat.com> - 1.5.3-12
 - Use standard Fedora linker flags (bug #1548670)
