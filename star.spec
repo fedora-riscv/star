@@ -7,7 +7,7 @@
 Summary:  An archiving tool with ACL support
 Name: star
 Version: 1.5.3
-Release: 12%{?dist}
+Release: 13%{?dist}
 License: CDDL
 Group: Applications/Archiving
 URL: http://freecode.com/projects/star
@@ -233,6 +233,9 @@ fi
 %{_sysconfdir}/rmt
 
 %changelog
+* Sat Jul 14 2018 Fedora Release Engineering <releng@fedoraproject.org> - 1.5.3-13
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_29_Mass_Rebuild
+
 * Mon Apr 09 2018 Rafael Santos <rdossant@redhat.com> - 1.5.3-12
 - Use standard Fedora linker flags (bug #1548670)
 
