@@ -7,7 +7,7 @@
 Summary:  An archiving tool with ACL support
 Name: star
 Version: 1.5.3
-Release: 13%{?dist}
+Release: 14%{?dist}
 License: CDDL
 Group: Applications/Archiving
 URL: http://freecode.com/projects/star
@@ -47,6 +47,9 @@ Patch10: star-1.5.3-star-mk.patch
 # Fix segfault for 'pax -X' (rhbz#1175009)
 # ~> downstream
 Patch11: star-1.5.3-pax-X-option.patch
+
+# Fix segfault on restore default acl (rhbz#1567836)
+Patch12: star-1.5.3-default-acl.patch
 
 BuildRequires: libattr-devel libacl-devel libtool libselinux-devel
 BuildRequires: e2fsprogs-devel
@@ -110,6 +113,7 @@ restoring files from a backup), and tar (an archiving program).
 %patch9 -p1 -b .ssh-by-default
 %patch10 -p1 -b .bug-config-1.5.3
 %patch11 -p1 -b .pax-X
+%patch12 -p1 -b .default-acl
 
 # disable single "fat" binary
 cp -a star/all.mk star/Makefile
@@ -233,6 +237,9 @@ fi
 %{_sysconfdir}/rmt
 
 %changelog
+* Wed Aug 01 2018 Vaclav Danek <vdanek@redhat.com> - 1.5.3-14
+- Fix segfault on restore default acl (rhbz#1567836)
+
 * Sat Jul 14 2018 Fedora Release Engineering <releng@fedoraproject.org> - 1.5.3-13
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_29_Mass_Rebuild
 
