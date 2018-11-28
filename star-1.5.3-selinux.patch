@@ -150,7 +150,7 @@ index 9dfcef7..464c751 100644
  	 * WARNING: We now are no more able to open a new remote connection
  	 * unless we have been called by root.
 diff --git a/star/star.mk b/star/star.mk
-index a6f6cff..68d3482 100644
+index fdaff9c..7b89f8c 100644
 --- a/star/star.mk
 +++ b/star/star.mk
 @@ -21,6 +21,7 @@ CPPOPTS +=	-DUSE_XATTR
@@ -161,12 +161,11 @@ index a6f6cff..68d3482 100644
  CFILES=		star.c header.c cpiohdr.c xheader.c xattr.c \
  		list.c extract.c create.c append.c diff.c restore.c \
  		remove.c star_unix.c acl_unix.c acltext.c fflags.c \
-@@ -35,7 +36,7 @@ CFILES=		star.c header.c cpiohdr.c xheader.c xattr.c \
- HFILES=		star.h starsubs.h dirtime.h xtab.h xutimes.h \
+@@ -36,6 +37,7 @@ HFILES=		star.h starsubs.h dirtime.h xtab.h xutimes.h \
  		movearch.h table.h props.h fifo.h diff.h restore.h \
- 		checkerr.h dumpdate.h bitstring.h
--LIBS=		-ldeflt -lrmt -lfind -lschily $(LIB_ACL) $(LIB_ATTR) $(LIB_SOCKET) $(LIB_INTL)
-+LIBS=		-ldeflt -lrmt -lfind -lschily $(LIB_ACL) $(LIB_ATTR) $(LIB_SOCKET) $(LIB_INTL) $(LIB_SELINUX)
+ 		checkerr.h dumpdate.h bitstring.h pathname.h
+ LIBS=		-ldeflt -lrmt -lfind -lschily $(LIB_ACL) $(LIB_ATTR) $(LIB_SOCKET) $(LIB_INTL) $(LIB_CAP)
++LIBS=		-ldeflt -lrmt -lfind -lschily $(LIB_ACL) $(LIB_ATTR) $(LIB_SOCKET) $(LIB_INTL) $(LIB_CAP) $(LIB_SELINUX)
  XMK_FILE=	Makefile.man starformatman.mk
  
  ###########################################################################

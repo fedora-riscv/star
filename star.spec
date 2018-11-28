@@ -7,29 +7,32 @@
 Summary:  An archiving tool with ACL support
 Name: star
 Version: 1.5.3
-Release: 14%{?dist}
+Release: 15%{?dist}
 License: CDDL
 Group: Applications/Archiving
 URL: http://freecode.com/projects/star
 Source: http://downloads.sourceforge.net/s-tar/%{name}-%{version}.tar.bz2
 
+# Fix broken star.mk in 1.5.3 (included from all.mk)
+Patch1: star-1.5.3-star-mk.patch
+
 # add SELinux support to star(#)
-Patch1: star-1.5.3-selinux.patch
+Patch2: star-1.5.3-selinux.patch
 
 # do not segfault with data-change-warn option (#255261)
-Patch2: star-1.5-changewarnSegv.patch
+Patch3: star-1.5-changewarnSegv.patch
 
 # Prevent buffer overflow for filenames with length of 100 characters (#556664)
-Patch3: star-1.5.2-bufferoverflow.patch
+Patch4: star-1.5.2-bufferoverflow.patch
 
 # Fix some invalid manpage references (#624612)
-Patch4: star-1.5.1-manpagereferences.patch
+Patch5: star-1.5.1-manpagereferences.patch
 
 # do not crash when xattrs are not set on all files (#861848)
-Patch5: star-1.5.1-selinux-segfault.patch
+Patch6: star-1.5.1-selinux-segfault.patch
 
 # note that the H=crc format uses Sum32 algorithm, not CRC
-Patch6: star-1.5.1-crc.patch
+Patch7: star-1.5.1-crc.patch
 
 # Allow rmt to access all files.
 # ~> downstream
@@ -41,15 +44,15 @@ Patch8: star-1.5.2-rmt-rh-access.patch
 # ~> related to #968980
 Patch9: star-1.5.2-use-ssh-by-default.patch
 
-# Fix broken star.mk in 1.5.3 (included from all.mk)
-Patch10: star-1.5.3-star-mk.patch
-
 # Fix segfault for 'pax -X' (rhbz#1175009)
 # ~> downstream
-Patch11: star-1.5.3-pax-X-option.patch
+Patch10: star-1.5.3-pax-X-option.patch
 
 # Fix segfault on restore default acl (rhbz#1567836)
-Patch12: star-1.5.3-default-acl.patch
+Patch11: star-1.5.3-default-acl.patch
+
+# Upstream fixed issues detected by covscan
+Patch12: star-1.5.3-covscan-2018.patch
 
 BuildRequires: libattr-devel libacl-devel libtool libselinux-devel
 BuildRequires: e2fsprogs-devel
@@ -101,19 +104,20 @@ restoring files from a backup), and tar (an archiving program).
 
 %prep
 %setup -q
+%patch1 -p1 -b .bug-config-1.5.3 %{?_rawbuild}
 %if %{WITH_SELINUX}
-%patch1 -p1 -b .selinux
+%patch2 -p1 -b .selinux
 %endif
-%patch2 -p1 -b .changewarnSegv
-%patch3 -p1 -b .namesoverflow
-%patch4 -p1 -b .references
-%patch5 -p1 -b .selinux-segfault
-%patch6 -p1 -b .crc
+%patch3 -p1 -b .changewarnSegv
+%patch4 -p1 -b .namesoverflow
+%patch5 -p1 -b .references
+%patch6 -p1 -b .selinux-segfault
+%patch7 -p1 -b .crc
 %patch8 -p1 -b .rmt-access-rules
 %patch9 -p1 -b .ssh-by-default
-%patch10 -p1 -b .bug-config-1.5.3
-%patch11 -p1 -b .pax-X
-%patch12 -p1 -b .default-acl
+%patch10 -p1 -b .pax-X
+%patch11 -p1 -b .default-acl
+%patch12 -p1 -b .covscan-2018
 
 # disable single "fat" binary
 cp -a star/all.mk star/Makefile
@@ -237,6 +241,10 @@ fi
 %{_sysconfdir}/rmt
 
 %changelog
+* Wed Nov 28 2018 Pavel Raiskup <praiskup@redhat.com> - 1.5.3-15
+- fix covscan issues which have upstream fix (rhbz#1602700)
+- reorder patches so we can easily apply %%_rawbuild macro
+
 * Wed Aug 01 2018 Vaclav Danek <vdanek@redhat.com> - 1.5.3-14
 - Fix segfault on restore default acl (rhbz#1567836)
 

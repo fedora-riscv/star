@@ -1,8 +1,8 @@
 diff --git a/star/star.mk b/star/star.mk
-index 68d3482..4961a29 100644
+index a6f6cff..fdaff9c 100644
 --- a/star/star.mk
 +++ b/star/star.mk
-@@ -32,11 +32,11 @@ CFILES=		star.c header.c cpiohdr.c xheader.c xattr.c \
+@@ -31,11 +31,11 @@ CFILES=		star.c header.c cpiohdr.c xheader.c xattr.c \
  		subst.c volhdr.c \
  		chdir.c match.c defaults.c dumpdate.c \
  		fifo.c device.c checkerr.c \
@@ -11,9 +11,9 @@ index 68d3482..4961a29 100644
  HFILES=		star.h starsubs.h dirtime.h xtab.h xutimes.h \
  		movearch.h table.h props.h fifo.h diff.h restore.h \
 -		checkerr.h dumpdate.h bitstring.h
--LIBS=		-ldeflt -lrmt -lfind -lschily $(LIB_ACL) $(LIB_ATTR) $(LIB_SOCKET) $(LIB_INTL) $(LIB_SELINUX)
+-LIBS=		-ldeflt -lrmt -lfind -lschily $(LIB_ACL) $(LIB_ATTR) $(LIB_SOCKET) $(LIB_INTL)
 +		checkerr.h dumpdate.h bitstring.h pathname.h
-+LIBS=		-ldeflt -lrmt -lfind -lschily $(LIB_ACL) $(LIB_ATTR) $(LIB_SOCKET) $(LIB_INTL) $(LIB_SELINUX) $(LIB_CAP)
++LIBS=		-ldeflt -lrmt -lfind -lschily $(LIB_ACL) $(LIB_ATTR) $(LIB_SOCKET) $(LIB_INTL) $(LIB_CAP)
  XMK_FILE=	Makefile.man starformatman.mk
  
  ###########################################################################
