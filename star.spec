@@ -186,8 +186,6 @@ install -p -m 644 COPYING star/README  CDDL.Schily.txt AN-* \
   rm -rf .%{_docdir}/rmt
 )
 
-%clean
-
 %global general_docs \
 %dir %{_pkgdocdir} \
 %doc %{_pkgdocdir}/COPYING \
