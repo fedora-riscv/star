@@ -7,7 +7,7 @@
 Summary:  An archiving tool with ACL support
 Name: star
 Version: 1.5.3
-Release: 15%{?dist}
+Release: 16%{?dist}
 License: CDDL
 URL: http://freecode.com/projects/star
 Source: http://downloads.sourceforge.net/s-tar/%{name}-%{version}.tar.bz2
@@ -235,6 +235,9 @@ fi
 %{_sysconfdir}/rmt
 
 %changelog
+* Sun Feb 03 2019 Fedora Release Engineering <releng@fedoraproject.org> - 1.5.3-16
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_30_Mass_Rebuild
+
 * Wed Nov 28 2018 Pavel Raiskup <praiskup@redhat.com> - 1.5.3-15
 - fix covscan issues which have upstream fix (rhbz#1602700)
 - reorder patches so we can easily apply %%_rawbuild macro
