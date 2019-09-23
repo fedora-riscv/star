@@ -1,57 +1,32 @@
-%if %{?WITH_SELINUX:0}%{!?WITH_SELINUX:1}
-%global WITH_SELINUX 1
-%endif
-
 %global ALTERNATIVES %{_sbindir}/alternatives
 
 Summary:  An archiving tool with ACL support
 Name: star
-Version: 1.5.3
-Release: 17%{?dist}
+Version: 1.6
+Release: 1%{?dist}
 License: CDDL
 URL: http://freecode.com/projects/star
-Source: http://downloads.sourceforge.net/s-tar/%{name}-%{version}.tar.bz2
+Source: https://downloads.sourceforge.net/s-tar/%{name}-%{version}.tar.bz2
 
-# Fix broken star.mk in 1.5.3 (included from all.mk)
-Patch1: star-1.5.3-star-mk.patch
 
-# add SELinux support to star(#)
-Patch2: star-1.5.3-selinux.patch
+# Fix broken all.mk
+Patch1: star-1.6-star-mk.patch
 
-# do not segfault with data-change-warn option (#255261)
-Patch3: star-1.5-changewarnSegv.patch
+# # Prevent buffer overflow for filenames with length of 100 characters (#556664)
+Patch2: star-1.5.2-bufferoverflow.patch
 
-# Prevent buffer overflow for filenames with length of 100 characters (#556664)
-Patch4: star-1.5.2-bufferoverflow.patch
-
-# Fix some invalid manpage references (#624612)
-Patch5: star-1.5.1-manpagereferences.patch
-
-# do not crash when xattrs are not set on all files (#861848)
-Patch6: star-1.5.1-selinux-segfault.patch
-
-# note that the H=crc format uses Sum32 algorithm, not CRC
-Patch7: star-1.5.1-crc.patch
+# # Fix some invalid manpage references (#624612)
+Patch3: star-1.6-manpagereferences.patch
 
 # Allow rmt to access all files.
 # ~> downstream
 # ~> #968980
-Patch8: star-1.5.2-rmt-rh-access.patch
+Patch4: star-1.5.2-rmt-rh-access.patch
 
 # Use ssh rather than rsh by default
 # ~> downstream
 # ~> related to #968980
-Patch9: star-1.5.2-use-ssh-by-default.patch
-
-# Fix segfault for 'pax -X' (rhbz#1175009)
-# ~> downstream
-Patch10: star-1.5.3-pax-X-option.patch
-
-# Fix segfault on restore default acl (rhbz#1567836)
-Patch11: star-1.5.3-default-acl.patch
-
-# Upstream fixed issues detected by covscan
-Patch12: star-1.5.3-covscan-2018.patch
+Patch5: star-1.5.2-use-ssh-by-default.patch
 
 BuildRequires: libattr-devel libacl-devel libtool libselinux-devel
 BuildRequires: e2fsprogs-devel
@@ -99,21 +74,7 @@ restoring files from a backup), and tar (an archiving program).
 %global ALT_SL1_PATH            %{_mandir}/man1/spax.1.gz
 
 %prep
-%setup -q
-%patch1 -p1 -b .bug-config-1.5.3 %{?_rawbuild}
-%if %{WITH_SELINUX}
-%patch2 -p1 -b .selinux
-%endif
-%patch3 -p1 -b .changewarnSegv
-%patch4 -p1 -b .namesoverflow
-%patch5 -p1 -b .references
-%patch6 -p1 -b .selinux-segfault
-%patch7 -p1 -b .crc
-%patch8 -p1 -b .rmt-access-rules
-%patch9 -p1 -b .ssh-by-default
-%patch10 -p1 -b .pax-X
-%patch11 -p1 -b .default-acl
-%patch12 -p1 -b .covscan-2018
+%autosetup -p1
 
 # disable single "fat" binary
 cp -a star/all.mk star/Makefile
@@ -152,7 +113,7 @@ done
     DEFCCOM=gcc
 
 # Note: disable optimalisation by COPTX='-g3 -O0' LDOPTX='-g3 -O0'
-make %{?_smp_mflags} %make_flags
+make %make_flags
 
 %install
 make install -s %make_flags
@@ -207,6 +168,7 @@ fi
 %{_bindir}/star
 %{_bindir}/ustar
 %{_mandir}/man1/star.1*
+%{_mandir}/man1/star_sym.1*
 %{_mandir}/man1/ustar.1*
 %{_mandir}/man5/star.5*
 
@@ -235,6 +197,12 @@ fi
 %{_sysconfdir}/rmt
 
 %changelog
+* Mon Sep 23 2019 Pavel Raiskup <praiskup@redhat.com> - 1.6-1
+- new upstream release
+- drop WITH_SELINUX knob and selinux patches, there's built-in support now
+- drop several patches which were incorporated upstream, except for
+  changewarnSegv patch (did not apply, and not needed nowadays)
+
 * Sat Jul 27 2019 Fedora Release Engineering <releng@fedoraproject.org> - 1.5.3-17
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_31_Mass_Rebuild
 
