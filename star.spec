@@ -3,7 +3,7 @@
 Summary:  An archiving tool with ACL support
 Name: star
 Version: 1.6
-Release: 1%{?dist}
+Release: 2%{?dist}
 License: CDDL
 URL: http://freecode.com/projects/star
 Source: https://downloads.sourceforge.net/s-tar/%{name}-%{version}.tar.bz2
@@ -197,6 +197,9 @@ fi
 %{_sysconfdir}/rmt
 
 %changelog
+* Fri Jan 31 2020 Fedora Release Engineering <releng@fedoraproject.org> - 1.6-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_32_Mass_Rebuild
+
 * Mon Sep 23 2019 Pavel Raiskup <praiskup@redhat.com> - 1.6-1
 - new upstream release
 - drop WITH_SELINUX knob and selinux patches, there's built-in support now
