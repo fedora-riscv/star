@@ -28,6 +28,7 @@ Patch4: star-1.5.2-rmt-rh-access.patch
 # ~> related to #968980
 Patch5: star-1.5.2-use-ssh-by-default.patch
 
+BuildRequires: make
 BuildRequires: libattr-devel libacl-devel libtool libselinux-devel
 BuildRequires: e2fsprogs-devel
 
